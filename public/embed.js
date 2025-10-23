@@ -1,130 +1,114 @@
 
-(function () {
-  // Config
-  const IFRAME_URL = 'http://localhost:9002/embed/create'; // In production, this should be your app's domain
-  const BUTTON_TEXT = 'Post to blogify.blog';
-
-  // State
-  let iframeVisible = false;
-
-  // Create button
+(function() {
+  // --- Create the button ---
   const button = document.createElement('button');
-  button.textContent = BUTTON_TEXT;
-  
-  // Style button
+  button.innerText = 'Post to blogify.blog';
+  // Basic styling - can be customized
   Object.assign(button.style, {
     position: 'fixed',
     bottom: '20px',
     right: '20px',
     padding: '12px 24px',
-    backgroundColor: '#77B6BA', // Accent color
+    backgroundColor: '#6A7E9C', // accent color
     color: 'white',
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
-    zIndex: '9998',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+    zIndex: '9999',
+    boxShadow: '0 4px 14px 0 rgba(0,0,0,0.1)',
     fontFamily: 'sans-serif',
     fontSize: '16px',
     fontWeight: 'bold',
-    transition: 'transform 0.2s ease',
   });
-  
-  document.body.appendChild(button);
 
-  // Create iframe container
-  const iframeContainer = document.createElement('div');
-  Object.assign(iframeContainer.style, {
+  // --- Create the modal container ---
+  const modal = document.createElement('div');
+  Object.assign(modal.style, {
+    display: 'none',
     position: 'fixed',
-    top: '0',
+    zIndex: '10000',
     left: '0',
+    top: '0',
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: '9999',
-    display: 'none',
-    alignItems: 'center',
+    overflow: 'auto',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
-    opacity: '0',
-    transition: 'opacity 0.3s ease-in-out',
+    alignItems: 'center',
   });
 
-  // Create iframe
-  const iframe = document.createElement('iframe');
-  iframe.src = IFRAME_URL;
-  Object.assign(iframe.style, {
+  // --- Create the modal content wrapper ---
+  const modalContent = document.createElement('div');
+   Object.assign(modalContent.style, {
+    position: 'relative',
+    backgroundColor: '#fefefe',
+    borderRadius: '8px',
     width: '90%',
     maxWidth: '600px',
-    height: '90%',
-    maxHeight: '800px',
-    border: 'none',
-    borderRadius: '12px',
-    boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
+    height: '80%',
+    maxHeight: '700px',
+    boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
+    overflow: 'hidden',
   });
 
-  iframeContainer.appendChild(iframe);
-  document.body.appendChild(iframeContainer);
-  
-  // Create close button for the modal
-  const closeButton = document.createElement('button');
+  // --- Create the close button ---
+  const closeButton = document.createElement('span');
   closeButton.innerHTML = '&times;';
-  Object.assign(closeButton.style, {
-      position: 'absolute',
-      top: '15px',
-      right: '25px',
-      background: 'transparent',
-      border: 'none',
-      fontSize: '32px',
-      lineHeight: '1',
-      color: '#fff',
-      cursor: 'pointer',
-      opacity: '0.8',
+   Object.assign(closeButton.style, {
+    position: 'absolute',
+    top: '10px',
+    right: '20px',
+    color: '#aaa',
+    fontSize: '28px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    zIndex: '10002',
   });
-  closeButton.onmouseover = () => closeButton.style.opacity = '1';
-  closeButton.onmouseout = () => closeButton.style.opacity = '0.8';
+
+  // --- Create the iframe ---
+  const iframe = document.createElement('iframe');
+  iframe.src = 'https://embedblogify.netlify.app/embed/create';
+   Object.assign(iframe.style, {
+    width: '100%',
+    height: '100%',
+    border: 'none',
+  });
+
+  // --- Assemble the modal ---
+  modalContent.appendChild(closeButton);
+  modalContent.appendChild(iframe);
+  modal.appendChild(modalContent);
   
-  iframeContainer.appendChild(closeButton);
+  // --- Add to the body ---
+  document.body.appendChild(button);
+  document.body.appendChild(modal);
 
-  // Toggle iframe visibility
-  function toggleIframe() {
-    iframeVisible = !iframeVisible;
-    if (iframeVisible) {
-      iframeContainer.style.display = 'flex';
-      setTimeout(() => {
-        iframeContainer.style.opacity = '1';
-      }, 10);
-    } else {
-      iframeContainer.style.opacity = '0';
-      setTimeout(() => {
-        iframeContainer.style.display = 'none';
-        // Reload iframe to reset its state when closed, good for UX
-        iframe.src = IFRAME_URL;
-      }, 300);
-    }
-  }
+  // --- Event Listeners ---
+  button.addEventListener('click', () => {
+    modal.style.display = 'flex';
+  });
 
-  button.addEventListener('click', toggleIframe);
-  closeButton.addEventListener('click', toggleIframe);
-  iframeContainer.addEventListener('click', (e) => {
-    // Close if backdrop is clicked
-    if (e.target === iframeContainer) {
-      toggleIframe();
+  closeButton.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.style.display = 'none';
     }
   });
 
+  // Listen for success message from the iframe
+  window.addEventListener('message', (event) => {
+    // IMPORTANT: Check the origin of the message for security
+    if (event.origin !== 'https://embedblogify.netlify.app') {
+      return;
+    }
 
-  // Listen for success message from iframe
-  window.addEventListener('message', function (event) {
-    // Basic security check for origin in a real-world scenario
-    // const appOrigin = new URL(IFRAME_URL).origin;
-    // if (event.origin !== appOrigin) {
-    //   return;
-    // }
-    
     if (event.data === 'blogify-success') {
-      if (iframeVisible) {
-        toggleIframe();
-      }
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 1500); // Close modal after a short delay
     }
   });
 
