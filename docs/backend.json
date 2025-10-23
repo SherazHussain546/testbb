@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "BlogPost": {
@@ -20,7 +21,11 @@
         },
         "authorName": {
           "type": "string",
-          "description": "The name of the author who created the blog post via the embeddable script."
+          "description": "The name of the author who created the blog post."
+        },
+        "authorId": {
+          "type": "string",
+          "description": "The unique ID of the authenticated author."
         },
         "publicationDate": {
           "type": "string",
@@ -38,6 +43,7 @@
         "title",
         "content",
         "authorName",
+        "authorId",
         "publicationDate",
         "originUrl"
       ]
@@ -45,8 +51,7 @@
   },
   "auth": {
     "providers": [
-      "password",
-      "anonymous"
+      "password"
     ]
   },
   "firestore": {
