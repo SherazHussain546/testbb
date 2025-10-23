@@ -1,8 +1,9 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useCollection } from '@/firebase';
-import { collection, getFirestore, orderBy, query, limit } from 'firebase/firestore';
+import { collection, orderBy, query, limit, type Query } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useFirebase } from '@/firebase';
 import { format } from 'date-fns';
@@ -12,15 +13,22 @@ export default function PostsPage() {
   const { firestore } = useFirebase();
   const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
 
-  const postsQuery = firestore && appId
-    ? query(
+  const [postsQuery, setPostsQuery] = useState<Query | null>(null);
+
+  useEffect(() => {
+    if (firestore && appId) {
+      const q = query(
         collection(firestore, `artifacts/${appId}/public/data/blog_posts`),
         orderBy('publicationDate', 'desc'),
         limit(20)
-      )
-    : null;
+      );
+      setPostsQuery(q);
+    }
+  }, [firestore, appId]);
 
   const { data: posts, loading, error } = useCollection(postsQuery);
+
+  const showSkeletons = loading || !postsQuery;
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8">
@@ -33,7 +41,7 @@ export default function PostsPage() {
         </p>
       </header>
 
-      {loading && (
+      {showSkeletons && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <Card key={i}>
@@ -62,7 +70,7 @@ export default function PostsPage() {
         </div>
       )}
 
-      {!loading && !error && posts && posts.length === 0 && (
+      {!showSkeletons && !error && posts && posts.length === 0 && (
          <div className="text-center py-16 border-2 border-dashed rounded-lg">
             <h2 className="text-xl font-semibold">No Posts Yet</h2>
             <p className="text-muted-foreground mt-2">
@@ -73,7 +81,7 @@ export default function PostsPage() {
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {posts?.map((post) => (
+        {!showSkeletons && posts?.map((post) => (
           <Card key={post.id} className="flex flex-col">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">{post.title}</CardTitle>
