@@ -3,6 +3,8 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { initializeFirebase } from "@/firebase";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(100),
@@ -40,14 +42,21 @@ export async function createPost(formData: FormData): Promise<State> {
   }
   
   try {
-    // Simulate a successful post creation without a database.
-    console.log("Simulating post creation with data:", validatedFields.data);
+    const { firestore } = initializeFirebase();
+    const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
+    if (!appId) {
+        throw new Error("Firebase App ID is not configured.");
+    }
+    const collectionPath = `artifacts/${appId}/public/data/blog_posts`;
     
-    // This will help in re-validating any pages that display blog posts, if you build them later.
-    revalidatePath("/");
+    const docRef = await addDoc(collection(firestore, collectionPath), {
+      ...validatedFields.data,
+      publicationDate: serverTimestamp(),
+    });
     
-    // We can return a static ID or a randomly generated one for the simulation.
-    return { success: true, postId: "simulated-post-id" };
+    revalidatePath("/posts");
+    
+    return { success: true, postId: docRef.id };
   } catch (error) {
     console.error("Error creating post:", error);
     let message = 'An unexpected error occurred while saving the post. Please try again.';

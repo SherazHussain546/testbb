@@ -4,6 +4,7 @@ import Link from 'next/link';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
   title: 'Blogify Embedder',
@@ -48,13 +49,15 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Alegreya&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-        </div>
-        <Toaster />
+        <FirebaseClientProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+          </div>
+          <Toaster />
+        </FirebaseClientProvider>
       </body>
     </html>
   );
