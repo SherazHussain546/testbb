@@ -43,7 +43,7 @@ export default function Home() {
         </main>
 
         <footer className="text-center text-muted-foreground text-sm pt-8">
-          <p>&copy; {new Date().getFullYear()} Blogify.blog. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} blogify.blog. All Rights Reserved.</p>
         </footer>
       </div>
     </div>
