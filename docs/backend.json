@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "BlogPost": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "BlogPost",
+      "type": "object",
+      "description": "Represents a blog post created via the embeddable script.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the blog post."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the blog post."
+        },
+        "content": {
+          "type": "string",
+          "description": "The main text content of the blog post."
+        },
+        "authorName": {
+          "type": "string",
+          "description": "The name of the author who created the blog post via the embeddable script."
+        },
+        "publicationDate": {
+          "type": "string",
+          "description": "The date and time the blog post was published.",
+          "format": "date-time"
+        },
+        "originUrl": {
+          "type": "string",
+          "description": "The URL of the website where the blog post was created from.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "content",
+        "authorName",
+        "publicationDate",
+        "originUrl"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "artifacts/{appId}/public/data/blog_posts/{blogPostId}",
+        "definition": {
+          "entityName": "BlogPost",
+          "schema": {
+            "$ref": "#/backend/entities/BlogPost"
+          },
+          "description": "Stores blog posts created via the embeddable script. Includes denormalized 'originUrl' for authorization independence (identifying the origin website).",
+          "params": [
+            {
+              "name": "appId",
+              "description": "The Firebase App ID.  Used to isolate artifacts across different apps."
+            },
+            {
+              "name": "blogPostId",
+              "description": "Unique identifier for the blog post."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This design prioritizes security and scalability for handling blog posts created via an embeddable script. The key principle is Authorization Independence, achieved by denormalizing the `originUrl` (representing the website where the blog post was created) into each `BlogPost` document. This eliminates the need for security rules to perform `get()` operations on parent documents, ensuring atomic operations and simplifying debugging. The structure supports secure list operations (QAPs) because each document inherently contains the information needed for authorization. Structural Segregation isn't strictly applicable here as all blog posts created via the embed should be treated the same way (i.e., publicly accessible). Access Modeling uses a top-level collection to avoid hierarchical dependencies."
+  }
+}
