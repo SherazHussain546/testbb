@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import {
   onSnapshot,
@@ -13,8 +13,10 @@ export function useCollection(query: Query | null) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const memoizedQuery = useMemo(() => query, [query]);
+
   useEffect(() => {
-    if (!query) {
+    if (!memoizedQuery) {
       setData(null);
       setLoading(false);
       return;
@@ -23,7 +25,7 @@ export function useCollection(query: Query | null) {
     setLoading(true);
 
     const unsubscribe: Unsubscribe = onSnapshot(
-      query,
+      memoizedQuery,
       (querySnapshot) => {
         const data: DocumentData[] = [];
         querySnapshot.forEach((doc) => {
@@ -41,7 +43,7 @@ export function useCollection(query: Query | null) {
     );
 
     return () => unsubscribe();
-  }, [query]);
+  }, [memoizedQuery]);
 
   return { data, loading, error };
 }
