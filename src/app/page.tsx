@@ -4,7 +4,7 @@ import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
 
 export default function Home() {
-  const embedScript = `<script src="https://embed.blogify.blog/embed.js" defer></script>`;
+  const embedScript = `<script src="https://embedblogify.netlify.app/embed.js" defer></script>`;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
