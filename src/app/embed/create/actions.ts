@@ -2,7 +2,7 @@
 "use server";
 
 import { z } from "zod";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebase"; // Using the configured firebase instance
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 
@@ -10,6 +10,7 @@ const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(100),
   content: z.string().min(1, "Content is required"),
   authorName: z.string().min(1, "Author name is required").max(50),
+  originUrl: z.string().url("Invalid origin URL"),
 });
 
 type State = {
@@ -17,6 +18,7 @@ type State = {
     title?: string[];
     content?: string[];
     authorName?: string[];
+    originUrl?: string[];
   };
   error?: string;
   success?: boolean;
@@ -24,7 +26,12 @@ type State = {
 }
 
 export async function createPost(formData: FormData): Promise<State> {
-  const rawFormData = Object.fromEntries(formData.entries());
+  const rawFormData = {
+    title: formData.get('title'),
+    content: formData.get('content'),
+    authorName: formData.get('authorName'),
+    originUrl: formData.get('originUrl'),
+  };
 
   const validatedFields = postSchema.safeParse(rawFormData);
 
@@ -34,32 +41,35 @@ export async function createPost(formData: FormData): Promise<State> {
     };
   }
   
+  // The App ID from your environment variables is crucial for the Firestore path
   const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
   if (!appId) {
-    console.error("Firebase App ID is not configured.");
+    console.error("Firebase App ID is not configured in environment variables.");
     return {
-      error: "Server configuration error. Unable to save post."
+      error: "Server configuration error: Firebase App ID is missing."
     };
   }
 
   try {
+    // The collection path matches the structure in your backend.json
     const docRef = await addDoc(
       collection(db, `artifacts/${appId}/public/data/blog_posts`),
       {
         ...validatedFields.data,
-        createdAt: serverTimestamp(),
+        publicationDate: serverTimestamp(), // Using server timestamp for publication date
       }
     );
     
+    // This will help in re-validating any pages that display blog posts, if you build them later.
     revalidatePath("/");
     
     return { success: true, postId: docRef.id };
   } catch (error) {
-    console.error("Error creating post:", error);
-    let message = 'An unexpected error occurred. Please try again.';
+    console.error("Error creating post in Firestore:", error);
+    let message = 'An unexpected error occurred while saving the post. Please try again.';
     if (error instanceof Error) {
-        // Potentially check for specific Firebase errors here
-        message = error.message;
+        // You can add more specific checks for Firebase errors here if needed
+        message = `Firestore error: ${error.message}`;
     }
     return {
       error: message

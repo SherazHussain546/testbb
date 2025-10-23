@@ -1,114 +1,121 @@
 
 (function() {
-  // --- Create the button ---
+  // The domain of your Next.js application hosting the embed form
+  const EMBED_HOST_DOMAIN = 'https://embedblogify.netlify.app';
+
+  // Create the "Post to blogify.blog" button
   const button = document.createElement('button');
-  button.innerText = 'Post to blogify.blog';
-  // Basic styling - can be customized
-  Object.assign(button.style, {
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    padding: '12px 24px',
-    backgroundColor: '#6A7E9C', // accent color
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    zIndex: '9999',
-    boxShadow: '0 4px 14px 0 rgba(0,0,0,0.1)',
-    fontFamily: 'sans-serif',
-    fontSize: '16px',
-    fontWeight: 'bold',
-  });
+  button.textContent = 'Post to blogify.blog';
+  button.style.position = 'fixed';
+  button.style.bottom = '20px';
+  button.style.right = '20px';
+  button.style.zIndex = '9999';
+  button.style.backgroundColor = '#6A7E9A'; // Accent color
+  button.style.color = 'white';
+  button.style.border = 'none';
+  button.style.borderRadius = '8px';
+  button.style.padding = '12px 20px';
+  button.style.fontSize = '16px';
+  button.style.cursor = 'pointer';
+  button.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+  button.style.fontFamily = 'sans-serif';
+  button.style.transition = 'transform 0.2s ease';
 
-  // --- Create the modal container ---
-  const modal = document.createElement('div');
-  Object.assign(modal.style, {
-    display: 'none',
-    position: 'fixed',
-    zIndex: '10000',
-    left: '0',
-    top: '0',
-    width: '100%',
-    height: '100%',
-    overflow: 'auto',
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  });
+  button.onmouseover = () => button.style.transform = 'scale(1.05)';
+  button.onmouseout = () => button.style.transform = 'scale(1)';
 
-  // --- Create the modal content wrapper ---
-  const modalContent = document.createElement('div');
-   Object.assign(modalContent.style, {
-    position: 'relative',
-    backgroundColor: '#fefefe',
-    borderRadius: '8px',
-    width: '90%',
-    maxWidth: '600px',
-    height: '80%',
-    maxHeight: '700px',
-    boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-    overflow: 'hidden',
-  });
-
-  // --- Create the close button ---
-  const closeButton = document.createElement('span');
-  closeButton.innerHTML = '&times;';
-   Object.assign(closeButton.style, {
-    position: 'absolute',
-    top: '10px',
-    right: '20px',
-    color: '#aaa',
-    fontSize: '28px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    zIndex: '10002',
-  });
-
-  // --- Create the iframe ---
-  const iframe = document.createElement('iframe');
-  iframe.src = 'https://embedblogify.netlify.app/embed/create';
-   Object.assign(iframe.style, {
-    width: '100%',
-    height: '100%',
-    border: 'none',
-  });
-
-  // --- Assemble the modal ---
-  modalContent.appendChild(closeButton);
-  modalContent.appendChild(iframe);
-  modal.appendChild(modalContent);
-  
-  // --- Add to the body ---
   document.body.appendChild(button);
-  document.body.appendChild(modal);
 
-  // --- Event Listeners ---
-  button.addEventListener('click', () => {
-    modal.style.display = 'flex';
-  });
+  // Modal elements
+  let modalOverlay = null;
+  let iframe = null;
 
-  closeButton.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
+  function openModal() {
+    if (modalOverlay) return; // Modal is already open
 
-  window.addEventListener('click', (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
+    // Get the URL of the site embedding the script
+    const originUrl = encodeURIComponent(window.location.origin);
+
+    // Create modal overlay
+    modalOverlay = document.createElement('div');
+    modalOverlay.style.position = 'fixed';
+    modalOverlay.style.top = '0';
+    modalOverlay.style.left = '0';
+    modalOverlay.style.width = '100%';
+    modalOverlay.style.height = '100%';
+    modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+    modalOverlay.style.zIndex = '10000';
+    modalOverlay.style.display = 'flex';
+    modalOverlay.style.alignItems = 'center';
+    modalOverlay.style.justifyContent = 'center';
+
+    // Create iframe container
+    const iframeContainer = document.createElement('div');
+    iframeContainer.style.position = 'relative';
+    iframeContainer.style.backgroundColor = 'white';
+    iframeContainer.style.width = '90%';
+    iframeContainer.style.maxWidth = '700px';
+    iframeContainer.style.height = '90%';
+    iframeContainer.style.maxHeight = '800px';
+    iframeContainer.style.borderRadius = '12px';
+    iframeContainer.style.overflow = 'hidden';
+    iframeContainer.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.25)';
+
+    // Create iframe
+    iframe = document.createElement('iframe');
+    iframe.src = `${EMBED_HOST_DOMAIN}/embed/create?originUrl=${originUrl}`;
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '×';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '10px';
+    closeButton.style.right = '15px';
+    closeButton.style.zIndex = '10001';
+    closeButton.style.background = 'transparent';
+    closeButton.style.border = 'none';
+    closeButton.style.fontSize = '28px';
+    closeButton.style.color = '#888';
+    closeButton.style.cursor = 'pointer';
+
+    closeButton.onclick = closeModal;
+    modalOverlay.onclick = function(e) {
+      if (e.target === modalOverlay) {
+        closeModal();
+      }
+    };
+    
+    iframeContainer.appendChild(iframe);
+    iframeContainer.appendChild(closeButton);
+    modalOverlay.appendChild(iframeContainer);
+    document.body.appendChild(modalOverlay);
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+  }
+
+  function closeModal() {
+    if (modalOverlay) {
+      document.body.removeChild(modalOverlay);
+      modalOverlay = null;
+      iframe = null;
+      document.body.style.overflow = 'auto'; // Restore scroll
     }
-  });
+  }
 
-  // Listen for success message from the iframe
-  window.addEventListener('message', (event) => {
-    // IMPORTANT: Check the origin of the message for security
-    if (event.origin !== 'https://embedblogify.netlify.app') {
+  // Assign click event to the button
+  button.onclick = openModal;
+
+  // Listen for messages from the iframe (e.g., to close the modal on success)
+  window.addEventListener('message', function(event) {
+    // Security check: only accept messages from your app's domain
+    if (event.origin !== EMBED_HOST_DOMAIN) {
       return;
     }
 
-    if (event.data === 'blogify-success') {
-      setTimeout(() => {
-        modal.style.display = 'none';
-      }, 1500); // Close modal after a short delay
+    if (event.data === 'blogify-post-success') {
+      closeModal();
     }
   });
 
