@@ -4,7 +4,7 @@ import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
 
 export default function Home() {
-  const embedScript = `<script src="http://localhost:9002/embed.js" defer></script>`;
+  const embedScript = `<script src="https://embed.blogify.blog/embed.js" defer></script>`;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
@@ -36,7 +36,7 @@ export default function Home() {
                 <CopyButton textToCopy={embedScript} />
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
-                Once added, a "Post to blogify.blog" button will appear on your site, allowing users to create posts in a pop-up modal. In a production environment, you would replace `http://localhost:9002` with your actual domain.
+                Once added, a "Post to blogify.blog" button will appear on your site, allowing users to create posts in a pop-up modal.
               </p>
             </CardContent>
           </Card>
