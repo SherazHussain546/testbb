@@ -21,8 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { signInWithEmail, signUpWithEmail } from "./auth-actions";
+import { signInWithEmail } from "./auth-actions";
 import type { User } from "firebase/auth";
 
 const postSchema = z.object({
@@ -43,7 +42,6 @@ type AuthFormValues = z.infer<typeof authSchema>;
 function AuthForm({ onAuthSuccess }: { onAuthSuccess: (user: User) => void }) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState("signin");
 
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
@@ -53,15 +51,10 @@ function AuthForm({ onAuthSuccess }: { onAuthSuccess: (user: User) => void }) {
   const onSubmit = async (values: AuthFormValues) => {
     setIsSubmitting(true);
     try {
-      let result;
-      if (activeTab === 'signin') {
-        result = await signInWithEmail(values.email, values.password);
-      } else {
-        result = await signUpWithEmail(values.email, values.password);
-      }
-
+      const result = await signInWithEmail(values.email, values.password);
+      
       if (result.success && result.user) {
-        toast({ title: "Success", description: activeTab === 'signin' ? "Signed in successfully." : "Account created successfully." });
+        toast({ title: "Success", description: "Signed in successfully." });
         onAuthSuccess(result.user as User);
       } else {
         throw new Error(result.error || "An unknown error occurred.");
@@ -74,66 +67,32 @@ function AuthForm({ onAuthSuccess }: { onAuthSuccess: (user: User) => void }) {
   };
 
   return (
-    <Tabs defaultValue="signin" className="w-full" onValueChange={setActiveTab}>
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="signin">Sign In</TabsTrigger>
-        <TabsTrigger value="signup">Sign Up</TabsTrigger>
-      </TabsList>
-      <TabsContent value="signin">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
-            <FormField control={form.control} name="email" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl><Input placeholder="you@example.com" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField control={form.control} name="password" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl><Input type="password" {...field} /></FormControl>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+        <FormField control={form.control} name="email" render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl><Input placeholder="you@example.com" {...field} /></FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField control={form.control} name="password" render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl><Input type="password" {...field} /></FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" disabled={isSubmitting} className="w-full">
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSubmitting ? "Signing In..." : "Sign In"}
-            </Button>
-          </form>
-        </Form>
-      </TabsContent>
-      <TabsContent value="signup">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
-            <FormField control={form.control} name="email" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl><Input placeholder="you@example.com" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField control={form.control} name="password" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl><Input type="password" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" disabled={isSubmitting} className="w-full">
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSubmitting ? "Creating Account..." : "Sign Up"}
-            </Button>
-          </form>
-        </Form>
-      </TabsContent>
-    </Tabs>
-  )
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting ? "Signing In..." : "Sign In"}
+        </Button>
+      </form>
+    </Form>
+  );
 }
 
 
@@ -256,7 +215,7 @@ export default function CreatePostPage() {
       <Card className="w-full max-w-2xl mx-auto border-none shadow-none bg-transparent">
         <CardHeader>
           <CardTitle className="text-center font-headline text-3xl">
-             {user ? "Create a new post" : "Post to blogify.blog"}
+             {user ? "Create a new post" : "Sign in to post to blogify.blog"}
           </CardTitle>
         </CardHeader>
         <CardContent>
