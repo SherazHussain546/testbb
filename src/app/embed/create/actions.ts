@@ -2,8 +2,6 @@
 "use server";
 
 import { z } from "zod";
-import { db } from "@/lib/firebase"; // Using the configured firebase instance
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 
 const postSchema = z.object({
@@ -41,35 +39,20 @@ export async function createPost(formData: FormData): Promise<State> {
     };
   }
   
-  // The App ID from your environment variables is crucial for the Firestore path
-  const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
-  if (!appId) {
-    console.error("Firebase App ID is not configured in environment variables.");
-    return {
-      error: "Server configuration error: Firebase App ID is missing."
-    };
-  }
-
   try {
-    // The collection path matches the structure in your backend.json
-    const docRef = await addDoc(
-      collection(db, `artifacts/${appId}/public/data/blog_posts`),
-      {
-        ...validatedFields.data,
-        publicationDate: serverTimestamp(), // Using server timestamp for publication date
-      }
-    );
+    // Simulate a successful post creation without a database.
+    console.log("Simulating post creation with data:", validatedFields.data);
     
     // This will help in re-validating any pages that display blog posts, if you build them later.
     revalidatePath("/");
     
-    return { success: true, postId: docRef.id };
+    // We can return a static ID or a randomly generated one for the simulation.
+    return { success: true, postId: "simulated-post-id" };
   } catch (error) {
-    console.error("Error creating post in Firestore:", error);
+    console.error("Error creating post:", error);
     let message = 'An unexpected error occurred while saving the post. Please try again.';
     if (error instanceof Error) {
-        // You can add more specific checks for Firebase errors here if needed
-        message = `Firestore error: ${error.message}`;
+        message = `Error: ${error.message}`;
     }
     return {
       error: message
