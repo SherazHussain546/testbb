@@ -1,9 +1,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code } from "lucide-react";
+import { Code, Eye } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const embedScript = `<script src="https://embedblogify.netlify.app/embed.js" defer></script>`;
@@ -37,9 +38,16 @@ export default function Home() {
                 <pre><code>{embedScript}</code></pre>
                 <CopyButton textToCopy={embedScript} />
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                Once added, a "Post to blogify.blog" button will appear on your site, allowing users to create posts in a pop-up modal.
-              </p>
+              <div className="mt-4 flex flex-col sm:flex-row gap-4 items-center">
+                <p className="text-sm text-muted-foreground flex-1">
+                  Once added, a "Post to blogify.blog" button will appear on your site, allowing users to create posts in a pop-up modal.
+                </p>
+                <Button asChild>
+                  <Link href="/embed/create" target="_blank">
+                    <Eye className="mr-2 h-4 w-4" /> Live Preview
+                  </Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </main>
