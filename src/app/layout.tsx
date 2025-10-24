@@ -19,7 +19,7 @@ function Header() {
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
             <Link href="/" className="flex items-center">
                 <span className="font-headline text-2xl tracking-tighter">
-                  <span className="font-bold">blogify</span><span className="text-primary">.blog</span>
+                  <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
                 </span>
             </Link>
             <nav className="flex items-center gap-2 sm:gap-4">
