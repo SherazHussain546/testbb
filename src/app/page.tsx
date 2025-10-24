@@ -44,14 +44,18 @@ export default function Home() {
           </Card>
         </main>
       </div>
-      <footer className="text-center text-muted-foreground text-sm py-8 mt-auto">
-        <p>&copy; {new Date().getFullYear()} 
-            <Link href="/" className="inline-flex items-center font-headline">
-                <span>
-                  blogify<span className="text-primary">.blog</span>
-                </span>
-            </Link>
-            . All Rights Reserved.
+      <footer className="text-center text-muted-foreground text-sm py-8 mt-auto space-y-2">
+        <p>&copy; {new Date().getFullYear()} blogify.blog. All Rights Reserved.</p>
+        <p>
+          Powered by{' '}
+          <a
+            href="http://synctech.ie"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            SYNC TECH Solutions
+          </a>
         </p>
       </footer>
     </div>
