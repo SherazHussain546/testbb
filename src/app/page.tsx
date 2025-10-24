@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
@@ -44,7 +45,7 @@ export default function Home() {
       </div>
       <footer className="text-center text-muted-foreground text-sm py-8 mt-auto">
         <p>&copy; {new Date().getFullYear()} 
-            <Link href="/" className="inline-flex items-center">
+            <Link href="/" className="inline-flex items-center font-headline">
                 <span className="font-bold">blogify</span>
                 <span className="text-primary font-bold">.blog</span>
             </Link>
@@ -54,3 +55,4 @@ export default function Home() {
     </div>
   );
 }
+
