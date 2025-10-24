@@ -46,8 +46,8 @@ export default function Home() {
       </div>
       <footer className="text-center text-muted-foreground text-sm py-8 mt-auto">
         <p>&copy; {new Date().getFullYear()} 
-            <Link href="/" className="inline-flex items-center gap-1 font-headline">
-                <span className="font-bold">
+            <Link href="/" className="inline-flex items-center font-headline">
+                <span>
                   blogify<span className="text-primary">.blog</span>
                 </span>
             </Link>
