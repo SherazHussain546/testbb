@@ -12,8 +12,8 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl w-full space-y-8">
         <header className="text-center space-y-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-headline tracking-tight">
-            Blogify Embedder
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-headline font-bold tracking-tight">
+            blogify<span className="text-primary">.blog</span> embed<span className="text-primary">&lt;&gt;</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
             Easily allow your users to post to Blogify directly from your website. Just copy and paste one line of code!
