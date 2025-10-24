@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { signOut } from './auth-actions';
 import { useRouter } from 'next/navigation';
-import { LogOut } from 'lucide-react';
+import { LogOut, Loader2 } from 'lucide-react';
 
 export function AuthButton() {
   const { user, loading } = useUser();
@@ -18,7 +18,7 @@ export function AuthButton() {
   };
 
   if (loading) {
-    return <Button variant="ghost" disabled>Loading...</Button>;
+    return <Button variant="ghost" disabled><Loader2 className="h-4 w-4 animate-spin" /></Button>;
   }
 
   if (user) {

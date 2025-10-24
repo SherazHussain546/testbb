@@ -1,7 +1,7 @@
 
 'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code } from "lucide-react";
+import { Code, Loader2 } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import { useUser } from "@/firebase/auth/use-user";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ function HomePageContent() {
       <div className="max-w-4xl w-full space-y-8">
         <header className="text-center space-y-4">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-headline font-bold tracking-tight">
-            blogify<span className="text-primary">.blog</span> embed<span className="text-primary">&lt;&gt;</span>
+            blogify<span className="text-primary font-bold">.blog</span> embed<span className="text-primary">&lt;&gt;</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
             Easily allow your users to post to blogify.blog directly from your website. Just copy and paste one line of code!
@@ -82,29 +82,9 @@ export default function Home() {
 
   if (loading || !user) {
     return (
-       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
-        <div className="max-w-4xl w-full space-y-8">
-          <header className="text-center space-y-4">
-             <Skeleton className="h-12 w-3/4 mx-auto" />
-             <Skeleton className="h-6 w-1/2 mx-auto" />
-          </header>
-          <main>
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-headline text-2xl">
-                  <Skeleton className="h-6 w-6 rounded-full" />
-                  <Skeleton className="h-6 w-48" />
-                </CardTitle>
-                <Skeleton className="h-4 w-full" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-4 w-3/4 mt-4" />
-              </CardContent>
-            </Card>
-          </main>
-        </div>
-      </div>
+       <div className="flex items-center justify-center min-h-screen">
+         <Loader2 className="h-8 w-8 animate-spin" />
+       </div>
     );
   }
 

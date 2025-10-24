@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { useUser } from '@/firebase/auth/use-user';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -25,16 +26,31 @@ export default function LoginPage() {
   const [state, formAction] = useActionState(signInWithEmail, { success: false });
   const router = useRouter();
   const { toast } = useToast();
+  const { user, loading } = useUser();
 
   useEffect(() => {
-    if (state.success) {
-      toast({ title: 'Success', description: 'Signed in successfully.' });
+    if (!loading && user) {
       router.push('/');
+    }
+  }, [user, loading, router]);
+  
+  useEffect(() => {
+    if (state.success) {
+      // The useUser hook will handle the redirect, this can be simplified.
+      // router.push('/'); 
     }
     if (state.error) {
       toast({ variant: 'destructive', title: 'Authentication Failed', description: state.error });
     }
   }, [state, router, toast]);
+
+  if (loading || user) {
+     return (
+       <div className="flex items-center justify-center min-h-screen">
+         <Loader2 className="h-8 w-8 animate-spin" />
+       </div>
+     );
+  }
 
   return (
     <main className="flex items-center justify-center min-h-[calc(100vh-8rem)] p-4">
