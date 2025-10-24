@@ -25,7 +25,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import React, { useEffect, useState, useRef } from "react";
-import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Link, List, Image as ImageIcon, Video, FileText } from "lucide-react";
+import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Link, List, Image as ImageIcon, Video, FileText } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { signInWithEmail } from "./auth-actions";
 import type { User } from "firebase/auth";
@@ -120,35 +120,40 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
     const selectedText = textarea.value.substring(start, end);
     const newText = `${before}${selectedText}${after}`;
     
-    // This is a simple way to insert text, for a more robust solution a library might be better
-    // but this works for simple markdown.
     const updatedValue = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
     field.onChange(updatedValue);
     
-    // Focus and set cursor position after insertion
     setTimeout(() => {
       textarea.focus();
-      const newCursorPosition = start + before.length + selectedText.length;
-      textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+      const newCursorPosition = start + before.length;
+      textarea.setSelectionRange(newCursorPosition, newCursorPosition + selectedText.length);
     }, 0);
   };
   
   const insertLink = (type: 'image' | 'video' | 'document' | 'link') => {
     const url = prompt(`Enter ${type} URL:`);
-    if(url){
-      const linkText = type === 'link' ? prompt("Enter link text:", "link text") : `My ${type}`;
-      if (linkText !== null) {
+    if (url) {
         let markdown;
         switch(type) {
-            case 'image': markdown = `![${linkText}](${url})`; break;
-            case 'video': markdown = `\\[video: ${url}]`; break; // Custom tag for video
-            case 'document': markdown = `\\[doc: ${linkText}](${url})`; break; // Custom tag for doc
-            case 'link': markdown = `[${linkText}](${url})`; break;
+            case 'image':
+                markdown = `![Image](${url})`;
+                break;
+            case 'video':
+                markdown = `[VIDEO LINK](${url})`;
+                break;
+            case 'document':
+                markdown = `[DOCUMENT LINK](${url})`;
+                break;
+            case 'link':
+                const linkText = prompt("Enter link text:", "link text");
+                if (linkText) {
+                    markdown = `[${linkText}](${url})`;
+                }
+                break;
         }
         if (markdown) {
-          insertText(markdown);
+            insertText(markdown);
         }
-      }
     }
   };
 
@@ -156,17 +161,20 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
   return (
     <div className="space-y-2">
        <div className="flex items-center gap-1 flex-wrap p-2 border rounded-md bg-muted">
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("# ")}><Heading1 className="h-4 w-4" /></Button>
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("## ")}><Heading2 className="h-4 w-4" /></Button>
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("### ")}><Heading3 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("# ", "")}><Heading1 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("## ", "")}><Heading2 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("### ", "")}><Heading3 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("#### ", "")}><Heading4 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("##### ", "")}><Heading5 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("###### ", "")}><Heading6 className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertText("**", "**")}><Bold className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertText("*", "*")}><Italic className="h-4 w-4" /></Button>
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n- ")}><List className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n- ", "")}><List className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('link')}><Link className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('image')}><ImageIcon className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('video')}><Video className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('document')}><FileText className="h-4 w-4" /></Button>
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n| Header 1 | Header 2 |\n|---|---|\n| Cell 1 | Cell 2 |\n| Cell 3 | Cell 4 |\n")}>T</Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |\n", "")}>T</Button>
        </div>
        <FormControl>
         <Textarea
@@ -341,3 +349,5 @@ export default function CreatePostPage() {
     </main>
   );
 }
+
+    
