@@ -1,11 +1,16 @@
 
+'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code } from "lucide-react";
+import { Code, LogOut } from "lucide-react";
 import { CopyButton } from "./copy-button";
+import { useUser } from "@/firebase/auth/use-user";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Home() {
+function HomePageContent() {
   const embedScript = `<script src="https://embedblogify.netlify.app/embed.js" defer></script>`;
-
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl w-full space-y-8">
@@ -26,7 +31,7 @@ export default function Home() {
                 Get Your Embed Script
               </CardTitle>
               <CardDescription>
-                Copy the script tag below and paste it just before the closing 
+                Copy the script tag below and paste it just before the closing
                 <code className="font-code mx-1 p-1 bg-muted rounded-sm">&lt;/body&gt;</code> tag on your website.
               </CardDescription>
             </CardHeader>
@@ -62,4 +67,46 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+
+export default function Home() {
+  const { user, loading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return (
+       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
+        <div className="max-w-4xl w-full space-y-8">
+          <header className="text-center space-y-4">
+             <Skeleton className="h-12 w-3/4 mx-auto" />
+             <Skeleton className="h-6 w-1/2 mx-auto" />
+          </header>
+          <main>
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline text-2xl">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-6 w-48" />
+                </CardTitle>
+                <Skeleton className="h-4 w-full" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-4 w-3/4 mt-4" />
+              </CardContent>
+            </Card>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  return <HomePageContent />;
 }

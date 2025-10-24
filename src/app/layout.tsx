@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import Script from 'next/script';
 import Image from 'next/image';
+import { AuthButton } from './auth-button';
 
 export const metadata: Metadata = {
   title: 'blogify.blog embed',
@@ -24,6 +25,7 @@ function Header() {
                 </span>
             </Link>
             <nav className="flex items-center gap-2 sm:gap-4">
+              <AuthButton />
             </nav>
         </div>
     </header>
