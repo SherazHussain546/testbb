@@ -6,10 +6,19 @@ import { revalidatePath } from "next/cache";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { initializeFirebase } from "@/firebase";
 
+const categories = [
+  "Sports",
+  "Movies & TV",
+  "Life",
+  "Tech",
+  "Fitness & Health",
+] as const;
+
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(100),
   content: z.string().min(1, "Content is required"),
   authorName: z.string().min(1, "Author name is required").max(50),
+  category: z.enum(categories),
   authorId: z.string().min(1, "Author ID is required"),
   originUrl: z.string().url("Invalid origin URL"),
 });
@@ -19,6 +28,7 @@ type State = {
     title?: string[];
     content?: string[];
     authorName?: string[];
+    category?: string[];
     authorId?: string[];
     originUrl?: string[];
   };
@@ -32,6 +42,7 @@ export async function createPost(formData: FormData): Promise<State> {
     title: formData.get('title'),
     content: formData.get('content'),
     authorName: formData.get('authorName'),
+    category: formData.get('category'),
     authorId: formData.get('authorId'),
     originUrl: formData.get('originUrl'),
   };
@@ -58,7 +69,10 @@ export async function createPost(formData: FormData): Promise<State> {
       publicationDate: serverTimestamp(),
     });
     
-    revalidatePath("/posts");
+    // This path won't exist in this new structure, but keeping it
+    // doesn't harm anything. A better approach would be to have the parent
+    // window listen for the success message and refresh itself.
+    revalidatePath("/posts"); 
     
     return { success: true, postId: docRef.id };
   } catch (error) {

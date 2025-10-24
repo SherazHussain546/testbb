@@ -9,25 +9,42 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import React, { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Link, List, Image as ImageIcon, Video, FileText } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { signInWithEmail } from "./auth-actions";
 import type { User } from "firebase/auth";
+import { Textarea } from "@/components/ui/textarea";
+
+const categories = [
+  "Sports",
+  "Movies & TV",
+  "Life",
+  "Tech",
+  "Fitness & Health",
+] as const;
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(100),
   content: z.string().min(1, "Content is required"),
   authorName: z.string().min(1, "Author name is required").max(50),
+  category: z.enum(categories),
   originUrl: z.string().url(),
 });
 
@@ -81,7 +98,6 @@ function AuthForm({ onAuthSuccess }: { onAuthSuccess: (user: User) => void }) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl><Input type="password" {...field} /></FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -95,10 +111,69 @@ function AuthForm({ onAuthSuccess }: { onAuthSuccess: (user: User) => void }) {
   );
 }
 
+function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.RefObject<HTMLTextAreaElement> }) {
+  const insertText = (before: string, after: string = "") => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+    const newText = `${before}${selectedText}${after}`;
+    
+    document.execCommand("insertText", false, newText);
+  };
+  
+  const insertLink = (type: 'image' | 'video' | 'document' | 'link') => {
+    const url = prompt(`Enter ${type} URL:`);
+    if(url){
+      const linkText = type === 'link' ? prompt("Enter link text:", "link text") : `My ${type}`;
+      if (linkText) {
+        let markdown;
+        switch(type) {
+            case 'image': markdown = `![${linkText}](${url})`; break;
+            case 'video': markdown = `\\[video: ${url}]`; break; // Custom tag for video
+            case 'document': markdown = `\\[doc: ${linkText}](${url})`; break; // Custom tag for doc
+            case 'link': markdown = `[${linkText}](${url})`; break;
+        }
+        insertText(markdown || '');
+      }
+    }
+  };
+
+
+  return (
+    <div className="space-y-2">
+       <div className="flex items-center gap-1 flex-wrap p-2 border rounded-md bg-muted">
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("# ")}><Heading1 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("## ")}><Heading2 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("### ")}><Heading3 className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("**", "**")}><Bold className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("*", "*")}><Italic className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("- ")}><List className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertLink('link')}><Link className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertLink('image')}><ImageIcon className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertLink('video')}><Video className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertLink('document')}><FileText className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("| Header 1 | Header 2 |\n|---|---|\n| Cell 1 | Cell 2 |\n| Cell 3 | Cell 4 |")}>T</Button>
+       </div>
+       <FormControl>
+        <Textarea
+          {...field}
+          ref={textareaRef}
+          className="min-h-[250px] resize-y"
+          placeholder="Write your masterpiece here... (Markdown supported)"
+          onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.onChange(e.target.value)}
+        />
+       </FormControl>
+    </div>
+  )
+}
 
 function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string }) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postSchema),
@@ -106,6 +181,7 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
       title: "",
       content: "",
       authorName: "",
+      category: "Tech",
       originUrl: originUrl,
     },
   });
@@ -132,14 +208,15 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
         title: "Error publishing post",
         description: result.error || "An unknown error occurred.",
       });
-      setIsSubmitting(false);
     }
+     setIsSubmitting(false);
   };
 
   return (
      <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField control={form.control} name="originUrl" render={({ field }) => (<FormItem><FormControl><Input type="hidden" {...field} /></FormControl></FormItem>)} />
+          
           <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-headline">Title</FormLabel>
@@ -148,14 +225,38 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
               </FormItem>
             )}
           />
+          
+          <FormField control={form.control} name="category" render={({ field }) => (
+             <FormItem>
+                <FormLabel className="font-headline">Category</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+             </FormItem>
+          )} />
+          
           <FormField control={form.control} name="content" render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-headline">Content</FormLabel>
-                <FormControl><Textarea placeholder="Once upon a time..." className="min-h-[150px] resize-y" {...field} /></FormControl>
+                <ContentEditor field={field} textareaRef={textareaRef} />
+                <FormDescription>
+                  You can use Markdown for formatting.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField control={form.control} name="authorName" render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-headline">Author Name</FormLabel>
@@ -164,6 +265,7 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
               </FormItem>
             )}
           />
+
           <Button type="submit" disabled={isSubmitting} className="w-full bg-accent hover:bg-accent/90" size="lg">
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isSubmitting ? "Publishing..." : "Publish Post"}

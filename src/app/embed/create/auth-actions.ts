@@ -17,7 +17,7 @@ type AuthResult = {
   error?: string;
 };
 
-// Helper to serialize user object
+// Helper to serialize user object because the full User object is not serializable
 const serializeUser = (user: User) => ({
   uid: user.uid,
   email: user.email,

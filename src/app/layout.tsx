@@ -20,15 +20,6 @@ function Header() {
                 blogify.blog
             </Link>
             <nav className="flex items-center gap-2 sm:gap-4">
-                <Button variant="ghost" asChild>
-                    <Link href="/">Home</Link>
-                </Button>
-                <Button variant="ghost" asChild>
-                    <Link href="/posts">Posts</Link>
-                </Button>
-                <Button variant="ghost" asChild>
-                    <Link href="/example">Example</Link>
-                </Button>
             </nav>
         </div>
     </header>

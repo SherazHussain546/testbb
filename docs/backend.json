@@ -17,7 +17,12 @@
         },
         "content": {
           "type": "string",
-          "description": "The main text content of the blog post."
+          "description": "The main text content of the blog post in Markdown format."
+        },
+        "category": {
+            "type": "string",
+            "description": "The category of the blog post.",
+            "enum": ["Sports", "Movies & TV", "Life", "Tech", "Fitness & Health"]
         },
         "authorName": {
           "type": "string",
@@ -42,6 +47,7 @@
         "id",
         "title",
         "content",
+        "category",
         "authorName",
         "authorId",
         "publicationDate",
