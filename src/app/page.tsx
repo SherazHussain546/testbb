@@ -1,12 +1,8 @@
 
 'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code, Loader2 } from "lucide-react";
+import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
-import { useUser } from "@/firebase/auth/use-user";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 function HomePageContent() {
   const embedScript = `<script src="https://embedblogify.netlify.app/embed.js" defer></script>`;
@@ -71,22 +67,5 @@ function HomePageContent() {
 
 
 export default function Home() {
-  const { user, loading } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
-
-  if (loading || !user) {
-    return (
-       <div className="flex items-center justify-center min-h-screen">
-         <Loader2 className="h-8 w-8 animate-spin" />
-       </div>
-    );
-  }
-
   return <HomePageContent />;
 }
