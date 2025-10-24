@@ -17,7 +17,8 @@ function Header() {
   return (
     <header className="bg-card/80 backdrop-blur-sm sticky top-0 z-40 border-b">
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center gap-2">
+                <Image src="/bbrb.png" alt="blogify.blog logo" width={28} height={28} />
                 <span className="font-headline text-2xl tracking-tighter">
                   <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
                 </span>
