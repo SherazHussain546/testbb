@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const embedScript = `<script src="https://embedblogify.netlify.app/embed.js" defer></script>`;
@@ -45,7 +46,8 @@ export default function Home() {
       </div>
       <footer className="text-center text-muted-foreground text-sm py-8 mt-auto">
         <p>&copy; {new Date().getFullYear()} 
-            <Link href="/" className="inline-flex items-center font-headline">
+            <Link href="/" className="inline-flex items-center gap-2 font-headline">
+                <Image src="/bbrb.png" alt="Blogify Logo" width={24} height={24} />
                 <span className="font-bold">blogify</span>
                 <span className="text-primary font-bold">.blog</span>
             </Link>
@@ -55,4 +57,3 @@ export default function Home() {
     </div>
   );
 }
-
