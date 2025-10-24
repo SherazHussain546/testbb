@@ -16,7 +16,7 @@ export default function Home() {
             blogify<span className="text-primary">.blog</span> embed<span className="text-primary">&lt;&gt;</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Easily allow your users to post to Blogify directly from your website. Just copy and paste one line of code!
+            Easily allow your users to post to blogify.blog directly from your website. Just copy and paste one line of code!
           </p>
         </header>
 
