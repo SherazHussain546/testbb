@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -121,14 +120,24 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
     const selectedText = textarea.value.substring(start, end);
     const newText = `${before}${selectedText}${after}`;
     
-    document.execCommand("insertText", false, newText);
+    // This is a simple way to insert text, for a more robust solution a library might be better
+    // but this works for simple markdown.
+    const updatedValue = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+    field.onChange(updatedValue);
+    
+    // Focus and set cursor position after insertion
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPosition = start + before.length + selectedText.length;
+      textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+    }, 0);
   };
   
   const insertLink = (type: 'image' | 'video' | 'document' | 'link') => {
     const url = prompt(`Enter ${type} URL:`);
     if(url){
       const linkText = type === 'link' ? prompt("Enter link text:", "link text") : `My ${type}`;
-      if (linkText) {
+      if (linkText !== null) {
         let markdown;
         switch(type) {
             case 'image': markdown = `![${linkText}](${url})`; break;
@@ -136,7 +145,9 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
             case 'document': markdown = `\\[doc: ${linkText}](${url})`; break; // Custom tag for doc
             case 'link': markdown = `[${linkText}](${url})`; break;
         }
-        insertText(markdown || '');
+        if (markdown) {
+          insertText(markdown);
+        }
       }
     }
   };
@@ -150,12 +161,12 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
          <Button size="sm" variant="outline" type="button" onClick={() => insertText("### ")}><Heading3 className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertText("**", "**")}><Bold className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertText("*", "*")}><Italic className="h-4 w-4" /></Button>
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("- ")}><List className="h-4 w-4" /></Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n- ")}><List className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('link')}><Link className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('image')}><ImageIcon className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('video')}><Video className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('document')}><FileText className="h-4 w-4" /></Button>
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("| Header 1 | Header 2 |\n|---|---|\n| Cell 1 | Cell 2 |\n| Cell 3 | Cell 4 |")}>T</Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n| Header 1 | Header 2 |\n|---|---|\n| Cell 1 | Cell 2 |\n| Cell 3 | Cell 4 |\n")}>T</Button>
        </div>
        <FormControl>
         <Textarea
@@ -163,7 +174,6 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
           ref={textareaRef}
           className="min-h-[250px] resize-y"
           placeholder="Write your masterpiece here... (Markdown supported)"
-          onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.onChange(e.target.value)}
         />
        </FormControl>
     </div>
