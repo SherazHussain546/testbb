@@ -1,8 +1,8 @@
 
 'use client';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { signUpWithEmail } from '@/app/auth-actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +23,7 @@ function SubmitButton() {
 }
 
 export default function SignupPage() {
-  const [state, formAction] = useFormState(signUpWithEmail, { success: false });
+  const [state, formAction] = useActionState(signUpWithEmail, { success: false });
   const router = useRouter();
   const { toast } = useToast();
 
