@@ -47,7 +47,6 @@ export default function Home() {
       <footer className="text-center text-muted-foreground text-sm py-8 mt-auto">
         <p>&copy; {new Date().getFullYear()} 
             <Link href="/" className="inline-flex items-center gap-1 font-headline">
-                <Image src="/bbrb.png" alt="Blogify Logo" width={20} height={20} />
                 <span className="font-bold">
                   blogify<span className="text-primary">.blog</span>
                 </span>
