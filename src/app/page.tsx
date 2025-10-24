@@ -1,7 +1,7 @@
 
 'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code, LogOut } from "lucide-react";
+import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import { useUser } from "@/firebase/auth/use-user";
 import { useRouter } from "next/navigation";
