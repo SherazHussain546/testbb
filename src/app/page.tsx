@@ -43,7 +43,7 @@ export default function Home() {
                   Once added, a "Post to blogify.blog" button will appear on your site, allowing users to create posts in a pop-up modal.
                 </p>
                 <Button asChild>
-                  <Link href="/embed/create" target="_blank">
+                  <Link href="/embed/create">
                     <Eye className="mr-2 h-4 w-4" /> Live Preview
                   </Link>
                 </Button>
