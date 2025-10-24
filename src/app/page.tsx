@@ -1,12 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
+import Link from "next/link";
 
 export default function Home() {
   const embedScript = `<script src="https://embedblogify.netlify.app/embed.js" defer></script>`;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl w-full space-y-8">
         <header className="text-center space-y-4">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-headline tracking-tight">
@@ -40,11 +41,16 @@ export default function Home() {
             </CardContent>
           </Card>
         </main>
-
-        <footer className="text-center text-muted-foreground text-sm pt-8">
-          <p>&copy; {new Date().getFullYear()} blogify.blog. All Rights Reserved.</p>
-        </footer>
       </div>
+      <footer className="text-center text-muted-foreground text-sm py-8 mt-auto">
+        <p>&copy; {new Date().getFullYear()} 
+            <Link href="/" className="inline-flex items-center gap-1">
+                <span className="font-bold">blogify</span>
+                <span className="text-primary font-bold">.blog</span>
+            </Link>
+            . All Rights Reserved.
+        </p>
+      </footer>
     </div>
   );
 }
