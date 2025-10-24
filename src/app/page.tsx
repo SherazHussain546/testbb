@@ -1,22 +1,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code, Eye } from "lucide-react";
+import { Code } from "lucide-react";
 import { CopyButton } from "./copy-button";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
 
 export default function Home() {
   const embedScript = `<script src="https://embedblogify.netlify.app/embed.js" defer></script>`;
-  const embedUrl = "/embed/create";
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
@@ -47,32 +35,10 @@ export default function Home() {
                 <pre><code>{embedScript}</code></pre>
                 <CopyButton textToCopy={embedScript} />
               </div>
-              <div className="mt-4 flex flex-col sm:flex-row gap-4 items-center">
-                <p className="text-sm text-muted-foreground flex-1">
+              <div className="mt-4">
+                <p className="text-sm text-muted-foreground">
                   Once added, a "Post to blogify.blog" button will appear on your site, allowing users to create posts in a pop-up modal.
                 </p>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button>
-                      <Eye className="mr-2 h-4 w-4" /> Live Preview
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl w-full h-[90vh] p-0">
-                    <DialogHeader className="p-6 pb-0">
-                      <DialogTitle>Live Embed Preview</DialogTitle>
-                      <DialogDescription>
-                        This is how the blog post creation form will appear inside a modal on your website.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex-1 p-6 pt-0">
-                      <iframe 
-                        src={embedUrl}
-                        className="w-full h-full border rounded-md"
-                        title="Live Preview"
-                      />
-                    </div>
-                  </DialogContent>
-                </Dialog>
               </div>
             </CardContent>
           </Card>
