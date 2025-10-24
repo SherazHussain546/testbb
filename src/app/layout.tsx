@@ -19,7 +19,9 @@ function Header() {
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
             <Link href="/" className="flex items-center gap-1">
                 <Image src="/bbrb.png" alt="Blogify Logo" width={28} height={28} />
-                <span className="font-headline font-bold text-2xl tracking-tighter">blogify</span><span className="font-headline font-bold text-2xl tracking-tighter text-primary">.blog</span>
+                <span className="font-headline font-bold text-2xl tracking-tighter">
+                  blogify<span className="text-primary">.blog</span>
+                </span>
             </Link>
             <nav className="flex items-center gap-2 sm:gap-4">
             </nav>

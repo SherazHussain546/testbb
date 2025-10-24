@@ -48,7 +48,9 @@ export default function Home() {
         <p>&copy; {new Date().getFullYear()} 
             <Link href="/" className="inline-flex items-center gap-1 font-headline">
                 <Image src="/bbrb.png" alt="Blogify Logo" width={20} height={20} />
-                <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
+                <span className="font-bold">
+                  blogify<span className="text-primary">.blog</span>
+                </span>
             </Link>
             . All Rights Reserved.
         </p>
