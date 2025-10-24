@@ -21,6 +21,7 @@ const postSchema = z.object({
   category: z.enum(categories),
   authorId: z.string().min(1, "Author ID is required"),
   originUrl: z.string().url("Invalid origin URL"),
+  isPublished: z.preprocess((val) => val === 'on', z.boolean()).optional().default(false),
 });
 
 type State = {
@@ -31,6 +32,7 @@ type State = {
     category?: string[];
     authorId?: string[];
     originUrl?: string[];
+    isPublished?: string[];
   };
   error?: string;
   success?: boolean;
@@ -45,6 +47,7 @@ export async function createPost(formData: FormData): Promise<State> {
     category: formData.get('category'),
     authorId: formData.get('authorId'),
     originUrl: formData.get('originUrl'),
+    isPublished: formData.get('isPublished'),
   };
 
   const validatedFields = postSchema.safeParse(rawFormData);

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -25,11 +26,12 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import React, { useEffect, useState, useRef } from "react";
-import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Link, List, Image as ImageIcon, Video, FileText } from "lucide-react";
+import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Link, List, Image as ImageIcon, Video, FileText, Table } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { signInWithEmail } from "./auth-actions";
 import type { User } from "firebase/auth";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 const categories = [
   "Sports",
@@ -45,6 +47,7 @@ const postSchema = z.object({
   authorName: z.string().min(1, "Author name is required").max(50),
   category: z.enum(categories),
   originUrl: z.string().url(),
+  isPublished: z.boolean().default(false),
 });
 
 const authSchema = z.object({
@@ -174,7 +177,7 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('image')}><ImageIcon className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('video')}><Video className="h-4 w-4" /></Button>
          <Button size="sm" variant="outline" type="button" onClick={() => insertLink('document')}><FileText className="h-4 w-4" /></Button>
-         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |\n", "")}>T</Button>
+         <Button size="sm" variant="outline" type="button" onClick={() => insertText("\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |\n", "")}><Table className="h-4 w-4" /></Button>
        </div>
        <FormControl>
         <Textarea
@@ -201,13 +204,20 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
       authorName: "",
       category: "Tech",
       originUrl: originUrl,
+      isPublished: false,
     },
   });
 
   const onSubmit = async (values: PostFormValues) => {
     setIsSubmitting(true);
     const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+    Object.entries(values).forEach(([key, value]) => {
+        if (typeof value === 'boolean') {
+            if (value) formData.append(key, 'on');
+        } else {
+            formData.append(key, value);
+        }
+    });
     formData.append('authorId', authorId);
 
     const result = await createPost(formData);
@@ -235,6 +245,27 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField control={form.control} name="originUrl" render={({ field }) => (<FormItem><FormControl><Input type="hidden" {...field} /></FormControl></FormItem>)} />
           
+          <FormField
+            control={form.control}
+            name="isPublished"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel>Publish</FormLabel>
+                  <FormDescription>
+                    Make this post visible to the public.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-headline">Title</FormLabel>
@@ -349,5 +380,3 @@ export default function CreatePostPage() {
     </main>
   );
 }
-
-    

@@ -41,6 +41,10 @@
           "type": "string",
           "description": "The URL of the website where the blog post was created from.",
           "format": "uri"
+        },
+        "isPublished": {
+            "type": "boolean",
+            "description": "Whether the post is visible to the public."
         }
       },
       "required": [
@@ -51,7 +55,8 @@
         "authorName",
         "authorId",
         "publicationDate",
-        "originUrl"
+        "originUrl",
+        "isPublished"
       ]
     }
   },
