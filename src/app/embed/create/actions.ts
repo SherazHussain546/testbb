@@ -5,6 +5,8 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { initializeFirebase } from "@/firebase";
+import { generatePost as generatePostFlow } from "@/ai/flows/generate-post-flow";
+
 
 const categories = [
   "Sports",
@@ -88,4 +90,37 @@ export async function createPost(formData: FormData): Promise<State> {
       error: message
     };
   }
+}
+
+const generatePostSchema = z.object({
+  topic: z.string().min(1, "Topic is required"),
+});
+
+type GeneratePostState = {
+    title?: string;
+    content?: string;
+    error?: string;
+}
+
+export async function generatePost(topic: string): Promise<GeneratePostState> {
+    const validatedFields = generatePostSchema.safeParse({ topic });
+
+    if (!validatedFields.success) {
+        return {
+            error: validatedFields.error.flatten().fieldErrors.topic?.join(', '),
+        };
+    }
+
+    try {
+        const result = await generatePostFlow({ topic: validatedFields.data.topic });
+        return {
+            title: result.title,
+            content: result.content,
+        };
+    } catch (error) {
+        console.error("Error generating post:", error);
+        return {
+            error: "Failed to generate post using AI. Please try again.",
+        };
+    }
 }

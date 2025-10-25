@@ -1,10 +1,10 @@
 
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createPost } from "./actions";
+import { createPost, generatePost } from "./actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,10 +23,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import React, { useEffect, useState, useRef } from "react";
-import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Link, List, Image as ImageIcon, Video, FileText, Table } from "lucide-react";
+import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Link, List, Image as ImageIcon, Video, FileText, Table, Sparkles } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { signInWithEmail } from "./auth-actions";
 import type { User } from "firebase/auth";
@@ -55,8 +65,13 @@ const authSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+const aiSchema = z.object({
+    topic: z.string().min(3, "Please enter a topic for the AI to write about."),
+});
+
 type PostFormValues = z.infer<typeof postSchema>;
 type AuthFormValues = z.infer<typeof authSchema>;
+type AiFormValues = z.infer<typeof aiSchema>;
 
 function AuthForm({ onAuthSuccess }: { onAuthSuccess: (user: User) => void }) {
   const { toast } = useToast();
@@ -191,6 +206,77 @@ function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.
   )
 }
 
+function AiWriterDialog({ onPostGenerated }: { onPostGenerated: (data: { title: string; content: string }) => void }) {
+    const [open, setOpen] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const { toast } = useToast();
+    
+    const form = useForm<AiFormValues>({
+        resolver: zodResolver(aiSchema),
+        defaultValues: { topic: "" },
+    });
+
+    const onSubmit = async (values: AiFormValues) => {
+        setIsGenerating(true);
+        const result = await generatePost(values.topic);
+        setIsGenerating(false);
+
+        if (result.error) {
+            toast({ variant: "destructive", title: "AI Generation Failed", description: result.error });
+        } else if (result.title && result.content) {
+            onPostGenerated({ title: result.title, content: result.content });
+            toast({ title: "Success", description: "AI has generated the post." });
+            setOpen(false);
+            form.reset();
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    Generate with AI
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>AI Writing Assistant</DialogTitle>
+                    <DialogDescription>
+                        Describe the topic you want the AI to write a blog post about.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="topic"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Topic</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="e.g., The future of renewable energy" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="ghost" disabled={isGenerating}>Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit" disabled={isGenerating}>
+                                {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isGenerating ? "Generating..." : "Generate Post"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string }) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -239,32 +325,41 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
     }
      setIsSubmitting(false);
   };
+  
+  const handleAiPostGenerated = (data: { title: string; content: string }) => {
+    form.setValue("title", data.title);
+    form.setValue("content", data.content);
+  };
 
   return (
      <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField control={form.control} name="originUrl" render={({ field }) => (<FormItem><FormControl><Input type="hidden" {...field} /></FormControl></FormItem>)} />
           
-          <FormField
-            control={form.control}
-            name="isPublished"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                <div className="space-y-0.5">
-                  <FormLabel>Publish</FormLabel>
-                  <FormDescription>
-                    Make this post visible to the public.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          <div className="flex justify-between items-center rounded-lg border p-3 shadow-sm">
+             <FormField
+                control={form.control}
+                name="isPublished"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-0.5">
+                      <FormLabel>Publish</FormLabel>
+                      <FormDescription className="text-xs">
+                        Make this post public.
+                      </FormDescription>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <AiWriterDialog onPostGenerated={handleAiPostGenerated} />
+          </div>
+
 
           <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
