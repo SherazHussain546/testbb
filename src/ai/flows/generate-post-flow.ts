@@ -33,8 +33,8 @@ const prompt = ai.definePrompt({
 
 Your output must adhere to the following strict requirements:
 
-1.  **Content Length**: The generated blog post content MUST be a minimum of 5000 words.
-2.  **Deep Search**: Before writing, perform a deep search on the topic to gather in-depth information, statistics, and diverse perspectives. The content should reflect this deep research and provide significant value to the reader.
+1.  **Deep Search**: Before writing, perform a deep search on the topic to gather in-depth information, statistics, and diverse perspectives. The content should reflect this deep research and provide significant value to the reader.
+2.  **Content Length**: The generated blog post content MUST be a minimum of 5000 words. This is a strict requirement.
 3.  **SEO Optimization**:
     *   **Keywords**: Naturally integrate primary and long-tail keywords throughout the article. The content must be rich in relevant keywords to maximize search engine visibility.
     *   **Structure**: Use clear headings (H1, H2, H3), subheadings, bullet points, and numbered lists to create a well-structured, easily scannable article.
