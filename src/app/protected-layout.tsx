@@ -41,31 +41,29 @@ export default function ProtectedLayout({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (loading) return; // Wait for the auth state to be confirmed
-    
-    // If loading is finished and there's no user, redirect to login.
-    // Do not redirect if we are already on the login page or an embed page.
-    if (!user && pathname !== '/login' && !pathname.startsWith('/embed')) {
+    // If we're done loading and there's no user, redirect to login.
+    // We explicitly exclude the login page and embed pages from this check.
+    if (!loading && !user && pathname !== '/login' && !pathname.startsWith('/embed')) {
       router.push('/login');
     }
   }, [user, loading, router, pathname]);
 
-  // Publicly accessible pages
+  // Publicly accessible pages that don't need protection or loading screens.
   if (pathname === '/login' || pathname.startsWith('/embed')) {
     return <>{children}</>;
   }
 
-  // While loading, show a loader to prevent race conditions or content flashing
+  // For all other pages, if we are still checking the auth state, show a loader.
   if (loading) {
     return <FullPageLoader />;
   }
 
-  // If there's a user, render the children for protected routes
+  // If we have finished loading and there is a user, render the protected content.
   if (user) {
     return <>{children}</>;
   }
 
-  // If no user and not loading (i.e., you are on a protected route and got kicked out),
-  // show a loader while the redirect to /login happens.
+  // If we are not loading and there's no user, we are about to redirect.
+  // Showing a loader here prevents a flash of unstyled or incorrect content.
   return <FullPageLoader />;
 }
