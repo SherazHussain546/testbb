@@ -80,23 +80,49 @@ function HomePageContent() {
                 Display Your Posts
               </CardTitle>
               <CardDescription>
-                {loading ? 'Loading your author ID...' : (user ? 'You are logged in! The snippet below is personalized with your unique Author ID. Paste it on your site where you want your posts to appear.' : 'Log in to get your personalized display script with your unique Author ID.')}
+                {loading ? 'Loading your author ID...' : (user ? 'You are logged in! The snippet below is personalized with your unique Author ID.' : 'Log in to get your personalized display script.')}
               </CardDescription>
             </CardHeader>
             <CardContent>
-               {user && (
-                 <div className="mb-4 p-3 rounded-md border bg-accent/20 border-accent/50 text-sm">
-                    <p className="flex items-center gap-2">
-                        <UserIcon className="w-4 h-4 text-primary" />
-                        <span className="font-medium">Your Author ID:</span>
-                        <code className="font-mono text-primary font-bold">{user.uid}</code>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Step 1: How to Get Your Author ID</h3>
+                  <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                    <li>To display posts, the script needs to know whose posts to show. This is done using your unique Author ID.</li>
+                    <li>If you are logged in, your Author ID is automatically inserted into the code snippet below, ready for you to copy.</li>
+                     <li>If you are not logged in, please sign in to get your personalized snippet.</li>
+                  </ul>
+                  {user && (
+                    <div className="mt-4 p-3 rounded-md border bg-accent/20 border-accent/50 text-sm">
+                        <p className="flex items-center gap-2">
+                            <UserIcon className="w-4 h-4 text-primary" />
+                            <span className="font-medium">Your Author ID:</span>
+                            <code className="font-mono text-primary font-bold">{user.uid}</code>
+                        </p>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                    <h3 className="font-semibold text-lg mb-2">Step 2: How to Add the Snippet</h3>
+                     <p className="text-muted-foreground mb-4">
+                        Copy the code snippet below. If you are logged in, it will already contain your personalized Author ID.
                     </p>
-                 </div>
-                )}
-              <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
-                <pre><code>{displayScript}</code></pre>
-                {loading && <Skeleton className="absolute inset-0 bg-muted/50" />}
-                <CopyButton textToCopy={displayScript} />
+                    <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
+                        <pre><code>{displayScript}</code></pre>
+                        {loading && <Skeleton className="absolute inset-0 bg-muted/50" />}
+                        <CopyButton textToCopy={displayScript} />
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="font-semibold text-lg mb-2">Step 3: Where to Use It & What Will Happen</h3>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                        <li>Paste this snippet into the HTML of any page where you want to display your posts, such as your personal blog, company website, or portfolio.</li>
+                        <li>The script will automatically fetch all of your **published** posts from blogify.blog and display them as a clean, responsive list of cards.</li>
+                        <li>The containing `div` will automatically resize to fit the content, preventing empty space on your page.</li>
+                    </ul>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -135,3 +161,5 @@ export default function Home() {
       <HomePageContent />
   )
 }
+
+    
