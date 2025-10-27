@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Code, BookOpen, User as UserIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import { useSiteUser } from "@/firebase/auth/use-site-user";
+import ProtectedLayout from './protected-layout';
 
-export default function Home() {
+function HomePageContent() {
     const { user } = useSiteUser();
 
     const createScript = `<div id="blogify-create-root"></div>
@@ -90,4 +91,13 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+
+export default function Home() {
+  return (
+    <ProtectedLayout>
+        <HomePageContent />
+    </ProtectedLayout>
+  )
 }
