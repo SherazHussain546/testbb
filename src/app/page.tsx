@@ -106,7 +106,7 @@ function HomePageContent() {
                 <div>
                     <h3 className="font-semibold text-lg mb-2">Step 2: How to Add the Snippet</h3>
                      <p className="text-muted-foreground mb-4">
-                        Copy the code snippet below. If you are logged in, it will already contain your personalized Author ID.
+                        Copy the code snippet below. You will need to replace 'YOUR_AUTHOR_ID_HERE' with the unique Author ID you receive from your provider.
                     </p>
                     <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
                         <pre><code>{displayScript}</code></pre>
@@ -161,7 +161,5 @@ export default function Home() {
       <HomePageContent />
   )
 }
-
-    
 
     
