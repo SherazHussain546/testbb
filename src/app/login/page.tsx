@@ -27,7 +27,6 @@ function SubmitButton() {
     )
 }
 
-
 export default function LoginPage() {
   const [state, formAction] = useFormState(signInWithEmail, initialState);
   const router = useRouter();
@@ -39,9 +38,10 @@ export default function LoginPage() {
         title: 'Sign In Successful',
         description: 'Redirecting to the homepage...',
       });
-      // Redirect to the homepage on successful login
+      // Redirect to the homepage on successful login and refresh the page
+      // to ensure the new auth state is picked up by the layout.
       router.push('/');
-      router.refresh(); // ensures the page is refreshed with the new auth state
+      router.refresh(); 
     } else if (state.error) {
       toast({
         variant: 'destructive',

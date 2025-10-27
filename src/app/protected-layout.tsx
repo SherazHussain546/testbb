@@ -24,7 +24,7 @@ export default function ProtectedLayout({
 
   useEffect(() => {
     // If loading is finished and there's no user, redirect to login.
-    // Exclude the login page and embed pages from protection.
+    // Exclude the login page and embed pages from this protection.
     if (!loading && !user && pathname !== '/login' && !pathname.startsWith('/embed')) {
       router.push('/login');
     }
@@ -46,6 +46,6 @@ export default function ProtectedLayout({
   }
 
   // If not loading and no user, the redirect is in progress.
-  // Show the loader to prevent a flash of incorrect content.
+  // Show the loader to prevent a flash of incorrect content while redirecting.
   return <FullPageLoader />;
 }
