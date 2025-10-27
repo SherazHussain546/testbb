@@ -44,7 +44,7 @@ function HomePageContent() {
                 <div>
                   <h3 className="font-semibold text-lg mb-2">Step 1: Copy the Code Snippet</h3>
                   <p className="text-muted-foreground mb-4">
-                    Place the following code block anywhere in the HTML of your website where you want the creation form to appear. A common place is on a user's dashboard or a dedicated "New Post" page.
+                    Place the following code block anywhere in the HTML of your website. **Recommendation:** Please add this code snippet where it is not visible to your customers or clients or consumers and as there would be a creation form would be appearing. A common place is on a user's dashboard or a dedicated "New Post" page.
                   </p>
                   <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
                     <pre><code>{createScript}</code></pre>
