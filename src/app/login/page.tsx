@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useEffect, useActionState } from 'react';
+import { useEffect } from 'react';
+import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,6 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useFormStatus } from 'react-dom';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
@@ -27,6 +29,16 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" className="w-full" disabled={pending}>
+            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Log In
+        </Button>
+    )
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,8 +50,7 @@ export default function LoginPage() {
 
   const {
     register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
@@ -50,8 +61,6 @@ export default function LoginPage() {
         title: 'Signed In',
         description: 'You have been successfully signed in.',
       });
-      // The combination of push and refresh is crucial.
-      // push navigates, and refresh ensures the protected layout re-evaluates auth.
       router.push('/');
       router.refresh();
     } else if (state.error) {
@@ -66,12 +75,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-4">
       <Card className="w-full max-w-sm">
-        <form action={formAction} onSubmit={handleSubmit(data => {
-            const formData = new FormData();
-            formData.append('email', data.email);
-            formData.append('password', data.password);
-            formAction(formData);
-        })}>
+        <form action={formAction}>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
             <CardDescription>
@@ -104,10 +108,7 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Log In
-            </Button>
+            <SubmitButton />
           </CardFooter>
         </form>
       </Card>
