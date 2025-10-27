@@ -1,3 +1,4 @@
+
 'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code, BookOpen, User as UserIcon } from "lucide-react";
@@ -35,13 +36,31 @@ function HomePageContent() {
                 Embed the "Create Post" Button
               </CardTitle>
               <CardDescription>
-                Copy the script tag below and paste it on your website where you want the "Post to blogify.blog" button to appear.
+                Follow these steps to allow your users to create blog posts directly from your website.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
-                <pre><code>{createScript}</code></pre>
-                <CopyButton textToCopy={createScript} />
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Step 1: Copy the Code Snippet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Place the following code block anywhere in the HTML of your website where you want the creation form to appear. A common place is on a user's dashboard or a dedicated "New Post" page.
+                  </p>
+                  <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
+                    <pre><code>{createScript}</code></pre>
+                    <CopyButton textToCopy={createScript} />
+                  </div>
+                </div>
+
+                <div>
+                    <h3 className="font-semibold text-lg mb-2">Step 2: How It Works</h3>
+                    <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                        <li>When you add this script to your site, it creates a secure area where your users can write and publish posts.</li>
+                        <li>First-time users will be prompted to sign into their blogify.blog account. This is a one-time step to link their account to your site.</li>
+                        <li>Once authenticated, they will see a rich text editor allowing them to write a title, content, select a category, and publish.</li>
+                        <li>All posts are saved securely and associated with the user's unique Author ID.</li>
+                    </ul>
+                </div>
               </div>
             </CardContent>
           </Card>
