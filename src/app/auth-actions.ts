@@ -28,6 +28,10 @@ export async function signInWithEmail(prevState: any, formData: FormData): Promi
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
+  if (!email || !password) {
+    return { success: false, error: "Email and password are required." };
+  }
+
   try {
     const { auth } = initializeSiteAuth();
     const userCredential = await signInWithEmailAndPassword(auth, email, password);

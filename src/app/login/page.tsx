@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { signInWithEmail } from '@/app/auth-actions';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,18 @@ const initialState = {
   success: false,
   error: undefined,
 };
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
+
+    return (
+        <Button type="submit" className="w-full" disabled={pending}>
+          {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          {pending ? 'Signing In...' : 'Sign In'}
+        </Button>
+    )
+}
+
 
 export default function LoginPage() {
   const [state, formAction] = useFormState(signInWithEmail, initialState);
@@ -29,9 +41,7 @@ export default function LoginPage() {
       });
       // Redirect to the homepage on successful login
       router.push('/');
-      // The push might not be instantaneous, so we can also use replace to avoid back button issues.
-      router.replace('/');
-
+      router.refresh(); // ensures the page is refreshed with the new auth state
     } else if (state.error) {
       toast({
         variant: 'destructive',
@@ -73,19 +83,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
-
-function SubmitButton() {
-    // useFormStatus is not available in Next.js 15.0.0-rc.0 with Turbopack, so we can't use it yet
-    // to show a pending state. For now, we'll just have a standard button.
-    // In a future version, we could do this:
-    // const { pending } = useFormStatus();
-    const pending = false; 
-
-    return (
-        <Button type="submit" className="w-full" disabled={pending}>
-          {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          {pending ? 'Signing In...' : 'Sign In'}
-        </Button>
-    )
 }
