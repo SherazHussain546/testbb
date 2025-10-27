@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useSiteUser } from '@/firebase/auth/use-site-user';
@@ -21,20 +22,27 @@ export default function ProtectedLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  // While checking for the user, show a loader. This is the most crucial part.
-  // We will not attempt any redirects until `loading` is false.
+  useEffect(() => {
+    // If loading is finished, there's no user, and we are not on the login page,
+    // then it's safe to redirect to the login page.
+    if (!loading && !user && pathname !== '/login') {
+      router.push('/login');
+    }
+  }, [user, loading, pathname, router]);
+
+  // While checking for the user, show a loader.
+  // This prevents the redirect loop by waiting for a definitive auth state.
   if (loading) {
     return <FullPageLoader />;
   }
 
-  // If loading is complete, and we are not on the login page, and there is no user,
-  // then it's safe to redirect to the login page.
+  // If loading is done and there's no user, we're in the process of redirecting,
+  // so we continue showing the loader to prevent a flash of content.
   if (!user && pathname !== '/login') {
-    router.push('/login');
-    // Return a loader while the redirect happens.
     return <FullPageLoader />;
   }
 
-  // If there's a user, or if we are on the login page, show the content.
+  // If there's a user, or if we are on the login page (which doesn't require auth),
+  // show the actual content.
   return <>{children}</>;
 }
