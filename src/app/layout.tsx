@@ -18,21 +18,21 @@ export const metadata: Metadata = {
 function Header() {
   return (
     <header className="bg-card/80 backdrop-blur-sm sticky top-0 z-40 border-b">
-        <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between p-2 sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Link href="/" className="flex items-center gap-2">
                   <Image src="/bbrb.png" alt="blogify.blog logo" width={28} height={28} />
-                  <span className="font-headline text-2xl tracking-tighter">
+                  <span className="font-headline text-xl sm:text-2xl tracking-tighter">
                     <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
-                    <span className="text-lg ml-1">embed<span className="text-primary">&lt;&gt;</span></span>
+                    <span className="text-base sm:text-lg ml-1">embed<span className="text-primary">&lt;&gt;</span></span>
                   </span>
               </Link>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <Button variant="ghost" asChild>
-                <a href="https://blogify.blog" target="_blank" rel="noopener noreferrer">
-                  <Home className="mr-2 h-4 w-4" /> 
-                  Home (blogify.blog)
+                <a href="https://blogify.blog" target="_blank" rel="noopener noreferrer" className="flex items-center">
+                  <Home className="h-4 w-4 sm:mr-2" /> 
+                  <span className="hidden sm:inline">Home (blogify.blog)</span>
                 </a>
               </Button>
               <AuthButton />
