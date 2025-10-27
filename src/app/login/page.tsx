@@ -50,8 +50,10 @@ export default function LoginPage() {
         title: 'Signed In',
         description: 'You have been successfully signed in.',
       });
+      // The combination of push and refresh is crucial.
+      // push navigates, and refresh ensures the protected layout re-evaluates auth.
       router.push('/');
-      router.refresh(); // Force a refresh to re-validate the protected layout
+      router.refresh();
     } else if (state.error) {
       toast({
         variant: 'destructive',

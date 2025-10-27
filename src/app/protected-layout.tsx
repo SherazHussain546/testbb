@@ -21,17 +21,17 @@ export default function ProtectedLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    // If loading is finished and there's no user, redirect to login page.
-    // We allow access to the login page itself to avoid a redirect loop.
-    if (!loading && !user && pathname !== '/login') {
-      router.push('/login');
-    }
-  }, [user, loading, router, pathname]);
+  // While checking for the user, show a loader. This is the most crucial part.
+  // We will not attempt any redirects until `loading` is false.
+  if (loading) {
+    return <FullPageLoader />;
+  }
 
-  // While checking for the user, show a loader.
-  // Also, don't run protection logic on the login page itself.
-  if (loading && pathname !== '/login') {
+  // If loading is complete, and we are not on the login page, and there is no user,
+  // then it's safe to redirect to the login page.
+  if (!user && pathname !== '/login') {
+    router.push('/login');
+    // Return a loader while the redirect happens.
     return <FullPageLoader />;
   }
 
