@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { FirebaseProvider } from './provider';
 import { initializeFirebase } from '.';
 import { initializeSiteAuth } from './site-auth-config';
-import { Skeleton } from '@/components/ui/skeleton';
 
 function FullPageLoader() {
   return (
