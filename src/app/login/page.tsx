@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -8,7 +7,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleLoginClick = () => {
-    // For now, this just navigates to the homepage to test the flow.
+    // This just navigates to the homepage to test the flow.
     router.push('/');
   };
 
