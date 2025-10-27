@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useUser } from '@/firebase/auth/use-user';
+import { useSiteUser } from '@/firebase/auth/use-site-user';
 import { Button } from '@/components/ui/button';
 import { handleSignOut } from './auth-actions';
 import { LogIn, LogOut } from 'lucide-react';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 export default function AuthButton() {
-  const { user, loading } = useUser();
+  const { user, loading } = useSiteUser();
   const router = useRouter();
   const pathname = usePathname();
 

@@ -48,13 +48,8 @@ export default function LoginPage() {
     }
   }, [state, router, toast]);
 
-  // Pass form data to the server action
-  const handleFormAction = (formData: FormData) => {
-    formAction(formData);
-  };
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-headline">
@@ -64,7 +59,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form action={handleFormAction} className="space-y-4">
+            <form action={formAction} className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useUser } from '@/firebase/auth/use-user';
+import { useSiteUser } from '@/firebase/auth/use-site-user';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -36,14 +36,16 @@ export default function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useUser();
+  const { user, loading } = useSiteUser();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
+    if (loading) return; // Wait for the auth state to be confirmed
+    
     // If loading is finished and there's no user, redirect to login.
     // Do not redirect if we are already on the login page or an embed page.
-    if (!loading && !user && pathname !== '/login' && !pathname.startsWith('/embed')) {
+    if (!user && pathname !== '/login' && !pathname.startsWith('/embed')) {
       router.push('/login');
     }
   }, [user, loading, router, pathname]);
@@ -53,17 +55,17 @@ export default function ProtectedLayout({
     return <>{children}</>;
   }
 
-  // While loading, show a loader to prevent race conditions
+  // While loading, show a loader to prevent race conditions or content flashing
   if (loading) {
     return <FullPageLoader />;
   }
 
-  // If there's a user, render the children
+  // If there's a user, render the children for protected routes
   if (user) {
     return <>{children}</>;
   }
 
-  // If no user and not loading (i.e., during the brief moment before redirect),
-  // show a loader to prevent flashing content on a protected route.
+  // If no user and not loading (i.e., you are on a protected route and got kicked out),
+  // show a loader while the redirect to /login happens.
   return <FullPageLoader />;
 }

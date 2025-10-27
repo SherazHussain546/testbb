@@ -5,7 +5,7 @@ import {
   signOut,
   signInWithEmailAndPassword
 } from 'firebase/auth';
-import { initializeFirebase } from '@/firebase';
+import { initializeSiteAuth } from '@/firebase/site-auth-config';
 import type { User } from "firebase/auth";
 
 type AuthResult = {
@@ -29,7 +29,7 @@ export async function signInWithEmail(prevState: any, formData: FormData): Promi
   const password = formData.get('password') as string;
 
   try {
-    const { auth } = initializeFirebase();
+    const { auth } = initializeSiteAuth();
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return { success: true, user: serializeUser(userCredential.user) };
   } catch (error: any) {
@@ -45,7 +45,7 @@ export async function signInWithEmail(prevState: any, formData: FormData): Promi
 
 export async function handleSignOut() {
     try {
-        const { auth } = initializeFirebase();
+        const { auth } = initializeSiteAuth();
         await signOut(auth);
         return { success: true };
     } catch (error: any) {

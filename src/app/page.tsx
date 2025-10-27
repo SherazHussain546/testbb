@@ -3,10 +3,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code, BookOpen, User as UserIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
-import { useUser } from "@/firebase/auth/use-user";
+import { useSiteUser } from "@/firebase/auth/use-site-user";
 
 export default function Home() {
-    const { user } = useUser();
+    const { user } = useSiteUser();
 
     const createScript = `<div id="blogify-create-root"></div>
 <script src="https://premium.blogify.blog/embed.js" defer></script>`;
