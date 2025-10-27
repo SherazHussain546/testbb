@@ -62,11 +62,11 @@ function HomePageContent() {
                 <div>
                     <h3 className="font-semibold text-lg mb-2">Step 3: What Will Happen and How to Access It</h3>
                     <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                        <li>Once you add the snippet, a "Post to blogify.blog" button will appear on your page.</li>
+                        <li>Once you add the snippet, a "**Post to blogify.blog**" button will appear on your page.</li>
                         <li>When a user on your site clicks this button, a secure iframe will open, displaying the blogify.blog posting form.</li>
                         <li>**First-Time Use**: The first time a user clicks the button, they will be asked to sign into their blogify.blog account. This is a one-time security step to link their account to your website, ensuring they are a valid author.</li>
                         <li>**Creating a Post**: After authenticating, they will see a rich text editor where they can write a title, add content using Markdown, select a category, and publish their post.</li>
-                        <li>All posts are saved securely to their blogify.blog account and are associated with their unique Author ID.</li>
+                        <li>All posts are saved securely to their blogify.blog account and are associated with their **unique Author ID**.</li>
                     </ul>
                 </div>
               </div>
@@ -88,15 +88,15 @@ function HomePageContent() {
                 <div>
                   <h3 className="font-semibold text-lg mb-2">Step 1: How to Get Your Author ID</h3>
                   <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                    <li>To display posts, the script needs to know whose posts to show. This is done using your unique Author ID.</li>
-                    <li>You will receive your unique Author ID from the service provider when you sign up.</li>
+                    <li>To display posts, the script needs to know whose posts to show. This is done using your **unique Author ID**.</li>
+                    <li>You will receive your **unique Author ID** from the service provider when you sign up.</li>
                      <li>If you are not logged in, please sign in to get your personalized snippet.</li>
                   </ul>
                   {user && (
                     <div className="mt-4 p-3 rounded-md border bg-accent/20 border-accent/50 text-sm">
                         <p className="flex items-center gap-2">
                             <UserIcon className="w-4 h-4 text-primary" />
-                            <span className="font-medium">Your Author ID:</span>
+                            <span className="font-medium">Your **Author ID**:</span>
                             <code className="font-mono text-primary font-bold">{user.uid}</code>
                         </p>
                     </div>
@@ -106,7 +106,7 @@ function HomePageContent() {
                 <div>
                     <h3 className="font-semibold text-lg mb-2">Step 2: How to Add the Snippet</h3>
                      <p className="text-muted-foreground mb-4">
-                        Copy the code snippet below. You will need to replace 'YOUR_AUTHOR_ID_HERE' with the unique Author ID you receive from your provider.
+                        Copy the code snippet below. You will need to **replace 'YOUR_AUTHOR_ID_HERE'** with the **unique Author ID** you receive from your provider.
                     </p>
                     <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
                         <pre><code>{displayScript}</code></pre>
@@ -119,7 +119,7 @@ function HomePageContent() {
                     <h3 className="font-semibold text-lg mb-2">Step 3: Where to Use It & What Will Happen</h3>
                     <ul className="list-disc list-inside text-muted-foreground space-y-2">
                         <li>Paste this snippet into the HTML of any page where you want to display your posts, such as your personal blog, company website, or portfolio.</li>
-                        <li>The script will automatically fetch all of your **published** posts from blogify.blog and display them as a clean, responsive list of cards.</li>
+                        <li>The script will **automatically fetch all of your published posts from blogify.blog** and display them as a clean, responsive list of cards.</li>
                         <li>The containing `div` will automatically resize to fit the content, preventing empty space on your page.</li>
                     </ul>
                 </div>
@@ -161,5 +161,7 @@ export default function Home() {
       <HomePageContent />
   )
 }
+
+    
 
     
