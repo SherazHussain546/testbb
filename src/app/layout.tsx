@@ -6,6 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import Image from 'next/image';
 import AuthButton from './auth-button';
+import { Button } from '@/components/ui/button';
+import { Home } from 'lucide-react';
 
 
 export const metadata: Metadata = {
@@ -17,13 +19,23 @@ function Header() {
   return (
     <header className="bg-card/80 backdrop-blur-sm sticky top-0 z-40 border-b">
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
-            <Link href="/" className="flex items-center gap-2">
-                <Image src="/bbrb.png" alt="blogify.blog logo" width={28} height={28} />
-                <span className="font-headline text-2xl tracking-tighter">
-                  <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
-                </span>
-            </Link>
-            <AuthButton />
+            <div className="flex items-center gap-4">
+              <Link href="/" className="flex items-center gap-2">
+                  <Image src="/bbrb.png" alt="blogify.blog logo" width={28} height={28} />
+                  <span className="font-headline text-2xl tracking-tighter">
+                    <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span> embed<span className="text-primary">&lt;&gt;</span>
+                  </span>
+              </Link>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" asChild>
+                <a href="https://blogify.blog" target="_blank" rel="noopener noreferrer">
+                  <Home className="mr-2 h-4 w-4" /> 
+                  Home (blogify.blog)
+                </a>
+              </Button>
+              <AuthButton />
+            </div>
         </div>
     </header>
   );
