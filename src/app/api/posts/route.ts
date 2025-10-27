@@ -30,12 +30,19 @@ export async function GET(request: NextRequest) {
     const querySnapshot = await getDocs(q);
     const posts = querySnapshot.docs.map(doc => {
         const data = doc.data();
-        return {
-            id: doc.id,
-            ...data,
-            // Convert Firestore Timestamp to a serializable format (ISO string)
-            publicationDate: data.publicationDate?.toDate ? data.publicationDate.toDate().toISOString() : null,
+        const publicationDate = data.publicationDate?.toDate ? data.publicationDate.toDate().toISOString() : null;
+        
+        // Ensure all fields are serializable
+        const postData = {
+          id: doc.id,
+          title: data.title || '',
+          content: data.content || '',
+          authorName: data.authorName || '',
+          category: data.category || '',
+          originUrl: data.originUrl || '',
+          publicationDate: publicationDate
         };
+        return postData;
     });
 
     return NextResponse.json(posts);

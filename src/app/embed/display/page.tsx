@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 
 type Post = {
@@ -14,12 +14,12 @@ type Post = {
     content: string;
     authorName: string;
     category: string;
-    publicationDate: string;
+    publicationDate: string | null;
     originUrl: string;
 };
 
 function PostCard({ post }: { post: Post }) {
-    const publicationDate = post.publicationDate ? new Date(post.publicationDate) : null;
+    const publicationDate = post.publicationDate ? parseISO(post.publicationDate) : null;
     return (
         <Card>
             <CardHeader>
@@ -85,7 +85,7 @@ export default function DisplayPostsPage() {
             fetch(`/api/posts?authorId=${authorId}`)
                 .then(res => {
                     if (!res.ok) {
-                        throw new Error('Failed to fetch posts');
+                        return res.json().then(err => { throw new Error(err.error || 'Failed to fetch posts') });
                     }
                     return res.json();
                 })
@@ -94,11 +94,12 @@ export default function DisplayPostsPage() {
                       throw new Error(data.error);
                     }
                     setPosts(data);
-                    setLoading(false);
                 })
                 .catch(err => {
                     console.error(err);
                     setError(err.message);
+                })
+                .finally(() => {
                     setLoading(false);
                 });
         } else {

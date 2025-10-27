@@ -5,6 +5,8 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import Image from 'next/image';
+import AuthButton from './auth-button';
+
 
 export const metadata: Metadata = {
   title: 'blogify.blog embed',
@@ -21,6 +23,7 @@ function Header() {
                   <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
                 </span>
             </Link>
+            <AuthButton />
         </div>
     </header>
   );
@@ -37,7 +40,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Belleza&family=Alegreya&display=swap" rel="stylesheet" />
         <script src="https://premium.blogify.blog/embed.js" defer></script>
       </head>
       <body className="font-body antialiased">
