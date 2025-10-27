@@ -1,73 +1,28 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase/auth/use-user';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code, BookOpen, User as UserIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
-import { Skeleton } from '@/components/ui/skeleton';
 
-function HomePageContent() {
-  const { user, loading } = useUser();
-  const router = useRouter();
+export default function Home() {
+  const { user } = useUser();
 
   const createScript = `<div id="blogify-create-root"></div>
 <script src="https://premium.blogify.blog/embed.js" defer></script>`;
+
   const [displayScript, setDisplayScript] = useState('');
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
     if (user) {
       setDisplayScript(`<div class="blogify-posts-embed" data-author-id="${user.uid}"></div>
 <script src="https://premium.blogify.blog/display.js" defer></script>`);
     }
-  }, [user, loading, router]);
+  }, [user]);
 
-  if (loading || !user) {
-    return (
-       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
-         <div className="max-w-4xl w-full space-y-12">
-            <header className="text-center space-y-4">
-              <Skeleton className="h-14 w-3/4 mx-auto" />
-              <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
-            </header>
-            <main className="space-y-10">
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 font-headline text-2xl">
-                     <Code className="w-6 h-6 text-primary" />
-                     <Skeleton className="h-7 w-64" />
-                  </CardTitle>
-                   <Skeleton className="h-4 w-full mt-2" />
-                   <Skeleton className="h-4 w-3/4 mt-1" />
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-secondary p-4 rounded-md font-code text-sm">
-                     <Skeleton className="h-5 w-full" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 font-headline text-2xl">
-                     <BookOpen className="w-6 h-6 text-primary" />
-                      <Skeleton className="h-7 w-56" />
-                  </CardTitle>
-                  <Skeleton className="h-4 w-full mt-2" />
-                  <Skeleton className="h-4 w-3/4 mt-1" />
-                </CardHeader>
-                <CardContent>
-                   <div className="bg-secondary p-4 rounded-md font-code text-sm">
-                     <Skeleton className="h-8 w-full" />
-                  </div>
-                </CardContent>
-              </Card>
-            </main>
-         </div>
-       </div>
-    )
+  // The ProtectedLayout handles the loading state, so we can assume `user` is available.
+  if (!user) {
+    return null; // or a fallback skeleton if preferred, though ProtectedLayout should prevent this state.
   }
 
   return (
@@ -143,9 +98,4 @@ function HomePageContent() {
       </footer>
     </div>
   );
-}
-
-
-export default function Home() {
-  return <HomePageContent />;
 }
