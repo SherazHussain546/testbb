@@ -89,7 +89,7 @@ function HomePageContent() {
                   <h3 className="font-semibold text-lg mb-2">Step 1: How to Get Your Author ID</h3>
                   <ul className="list-disc list-inside text-muted-foreground space-y-2">
                     <li>To display posts, the script needs to know whose posts to show. This is done using your unique Author ID.</li>
-                    <li>If you are logged in, your Author ID is automatically inserted into the code snippet below, ready for you to copy.</li>
+                    <li>You will receive your unique Author ID from the service provider when you sign up.</li>
                      <li>If you are not logged in, please sign in to get your personalized snippet.</li>
                   </ul>
                   {user && (
@@ -161,5 +161,7 @@ export default function Home() {
       <HomePageContent />
   )
 }
+
+    
 
     
