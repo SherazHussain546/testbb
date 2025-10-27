@@ -4,10 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Code, BookOpen, User as UserIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import { useSiteUser } from "@/firebase/auth/use-site-user";
-import ProtectedLayout from './protected-layout';
 
 function HomePageContent() {
-    const { user } = useSiteUser();
+    const { user, loading } = useSiteUser();
 
     const createScript = `<div id="blogify-create-root"></div>
 <script src="https://premium.blogify.blog/embed.js" defer></script>`;
@@ -54,7 +53,7 @@ function HomePageContent() {
                 Display Your Posts
               </CardTitle>
               <CardDescription>
-                You are logged in! The snippet below is personalized with your unique Author ID. Paste it on your site where you want your posts to appear.
+                {loading ? 'Loading your author ID...' : (user ? 'You are logged in! The snippet below is personalized with your unique Author ID. Paste it on your site where you want your posts to appear.' : 'Log in to get your personalized display script with your unique Author ID.')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -96,8 +95,6 @@ function HomePageContent() {
 
 export default function Home() {
   return (
-    <ProtectedLayout>
-        <HomePageContent />
-    </ProtectedLayout>
+      <HomePageContent />
   )
 }
