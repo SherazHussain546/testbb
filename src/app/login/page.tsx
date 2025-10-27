@@ -16,7 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { signInWithEmail } from "../auth-actions";
@@ -50,50 +49,46 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
-      <Card className="w-full max-w-sm mx-auto">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-headline">
-             <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
-          </CardTitle>
-          <CardDescription>Sign in to get your embed scripts</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form action={formAction} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="you@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" disabled={isPending} className="w-full">
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isPending ? "Signing In..." : "Sign In"}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+        <div className="w-full max-w-sm mx-auto p-4 space-y-6">
+            <div className="text-center space-y-2">
+                <h1 className="text-3xl font-bold font-headline">Sign In</h1>
+                <p className="text-muted-foreground">Enter your credentials to access your account</p>
+            </div>
+            <Form {...form}>
+                <form action={formAction} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input placeholder="you@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" disabled={isPending} className="w-full">
+                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isPending ? "Signing In..." : "Sign In"}
+                  </Button>
+                </form>
+            </Form>
+        </div>
     </div>
   );
 }
