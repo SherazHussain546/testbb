@@ -140,7 +140,7 @@ function HomePageContent() {
           © {new Date().getFullYear()} blogify.blog. All Rights Reserved.
         </p>
         <p>
-          Partnered with{' '}
+          In collaboration with{' '}
           <a
             href="http://synctech.ie"
             target="_blank"
