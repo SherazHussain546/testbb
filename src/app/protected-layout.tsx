@@ -53,7 +53,7 @@ export default function ProtectedLayout({
     return <>{children}</>;
   }
 
-  // While loading, show a loader
+  // While loading, show a loader to prevent race conditions
   if (loading) {
     return <FullPageLoader />;
   }

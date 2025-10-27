@@ -36,12 +36,18 @@ export default function AuthButton() {
     );
   }
 
-  return (
-    <Button asChild>
-      <Link href="/login">
-        <LogIn className="mr-2 h-4 w-4" />
-        Sign In
-      </Link>
-    </Button>
-  );
+  // If not loading and no user, show the sign-in button,
+  // but only if not on an embed page.
+  if (!pathname.startsWith('/embed')) {
+    return (
+      <Button asChild>
+        <Link href="/login">
+          <LogIn className="mr-2 h-4 w-4" />
+          Sign In
+        </Link>
+      </Button>
+    );
+  }
+
+  return null;
 }

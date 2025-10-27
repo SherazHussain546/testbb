@@ -41,7 +41,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (state?.success) {
-      toast({ title: "Success", description: "Signed in successfully." });
+      toast({ title: "Success", description: "Signed in successfully. Redirecting..." });
       router.push("/");
     } else if (state?.error) {
       toast({ variant: "destructive", title: "Authentication Failed", description: state.error });
@@ -60,7 +60,7 @@ export default function LoginPage() {
           <CardTitle className="text-2xl font-headline">
              <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
           </CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
+          <CardDescription>Sign in to get your embed scripts</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
