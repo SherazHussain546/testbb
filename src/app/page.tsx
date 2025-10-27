@@ -1,9 +1,9 @@
-
 'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code, BookOpen, User as UserIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import { useSiteUser } from "@/firebase/auth/use-site-user";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function HomePageContent() {
     const { user, loading } = useSiteUser();
@@ -57,8 +57,18 @@ function HomePageContent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+               {user && (
+                 <div className="mb-4 p-3 rounded-md border bg-accent/20 border-accent/50 text-sm">
+                    <p className="flex items-center gap-2">
+                        <UserIcon className="w-4 h-4 text-primary" />
+                        <span className="font-medium">Your Author ID:</span>
+                        <code className="font-mono text-primary font-bold">{user.uid}</code>
+                    </p>
+                 </div>
+                )}
               <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
                 <pre><code>{displayScript}</code></pre>
+                {loading && <Skeleton className="absolute inset-0 bg-muted/50" />}
                 <CopyButton textToCopy={displayScript} />
               </div>
             </CardContent>
