@@ -14,8 +14,11 @@ export default function AuthButton() {
   const pathname = usePathname();
 
   const onSignOut = async () => {
-    await handleSignOut();
-    router.push('/login');
+    const result = await handleSignOut();
+    if (result.success) {
+        router.push('/login');
+        router.refresh();
+    }
   };
 
   // Don't render the auth button on the login page
