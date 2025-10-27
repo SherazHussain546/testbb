@@ -42,9 +42,9 @@ function HomePageContent() {
             <CardContent>
               <div className="space-y-6">
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Step 1: Copy the Code Snippet</h3>
+                  <h3 className="font-semibold text-lg mb-2">Step 1: How to Add the Snippet</h3>
                   <p className="text-muted-foreground mb-4">
-                    Place the following code block anywhere in the HTML of your website. **Recommendation:** Please add this code snippet where it is not visible to your customers or clients or consumers and as there would be a creation form would be appearing. A common place is on a user's dashboard or a dedicated "New Post" page.
+                    Copy the following code block and paste it into the HTML of your website.
                   </p>
                   <div className="bg-secondary p-4 rounded-md font-code text-sm overflow-x-auto relative group">
                     <pre><code>{createScript}</code></pre>
@@ -53,12 +53,20 @@ function HomePageContent() {
                 </div>
 
                 <div>
-                    <h3 className="font-semibold text-lg mb-2">Step 2: How It Works</h3>
+                    <h3 className="font-semibold text-lg mb-2">Step 2: Where to Use It</h3>
+                    <p className="text-muted-foreground mb-4">
+                        **Recommendation:** This script will render a complete post creation form inside an iframe. It is designed for authenticated users who are part of your community. Please add this code snippet to a secure page that is not visible to the general public, such as a user dashboard, profile page, or a dedicated "New Post" area after they have logged into your website.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 className="font-semibold text-lg mb-2">Step 3: What Will Happen and How to Access It</h3>
                     <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                        <li>When you add this script to your site, it creates a secure area where your users can write and publish posts.</li>
-                        <li>First-time users will be prompted to sign into their blogify.blog account. This is a one-time step to link their account to your site.</li>
-                        <li>Once authenticated, they will see a rich text editor allowing them to write a title, content, select a category, and publish.</li>
-                        <li>All posts are saved securely and associated with the user's unique Author ID.</li>
+                        <li>Once you add the snippet, a "Post to blogify.blog" button will appear on your page.</li>
+                        <li>When a user on your site clicks this button, a secure iframe will open, displaying the blogify.blog posting form.</li>
+                        <li>**First-Time Use**: The first time a user clicks the button, they will be asked to sign into their blogify.blog account. This is a one-time security step to link their account to your website, ensuring they are a valid author.</li>
+                        <li>**Creating a Post**: After authenticating, they will see a rich text editor where they can write a title, add content using Markdown, select a category, and publish their post.</li>
+                        <li>All posts are saved securely to their blogify.blog account and are associated with their unique Author ID.</li>
                     </ul>
                 </div>
               </div>
