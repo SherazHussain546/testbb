@@ -8,12 +8,12 @@ import { useUser } from "@/firebase/auth/use-user";
 export default function Home() {
     const { user } = useUser();
 
-  const createScript = `<div id="blogify-create-root"></div>
+    const createScript = `<div id="blogify-create-root"></div>
 <script src="https://premium.blogify.blog/embed.js" defer></script>`;
 
-  const displayScript = `<div class="blogify-posts-embed" data-author-name="YOUR_AUTHOR_NAME_HERE"></div>
+  // Dynamically create the display script with the user's ID
+  const displayScript = `<div class="blogify-posts-embed" data-author-id="${user?.uid || 'YOUR_AUTHOR_ID_HERE'}"></div>
 <script src="https://premium.blogify.blog/display.js" defer></script>`;
-
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
@@ -53,7 +53,7 @@ export default function Home() {
                 Display Your Posts
               </CardTitle>
               <CardDescription>
-                Enter the author name you use when creating posts below. Then, paste the snippet on your site where you want your posts to appear.
+                You are logged in! The snippet below is personalized with your unique Author ID. Paste it on your site where you want your posts to appear.
               </CardDescription>
             </CardHeader>
             <CardContent>
