@@ -1,29 +1,19 @@
+
 'use client';
-import { useState, useEffect } from 'react';
-import { useUser } from '@/firebase/auth/use-user';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code, BookOpen, User as UserIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
+import { useUser } from "@/firebase/auth/use-user";
 
 export default function Home() {
-  const { user } = useUser();
+    const { user } = useUser();
 
   const createScript = `<div id="blogify-create-root"></div>
 <script src="https://premium.blogify.blog/embed.js" defer></script>`;
 
-  const [displayScript, setDisplayScript] = useState('');
+  const displayScript = `<div class="blogify-posts-embed" data-author-id="YOUR_AUTHOR_ID_HERE"></div>
+<script src="https://premium.blogify.blog/display.js" defer></script>`;
 
-  useEffect(() => {
-    if (user) {
-      setDisplayScript(`<div class="blogify-posts-embed" data-author-id="${user.uid}"></div>
-<script src="https://premium.blogify.blog/display.js" defer></script>`);
-    }
-  }, [user]);
-
-  // The ProtectedLayout handles the loading state, so we can assume `user` is available.
-  if (!user) {
-    return null; // or a fallback skeleton if preferred, though ProtectedLayout should prevent this state.
-  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] p-4 sm:p-6 md:p-8">
@@ -63,7 +53,7 @@ export default function Home() {
                 Display Your Posts
               </CardTitle>
               <CardDescription>
-                This snippet is generated specifically for your account. Paste it on your site where you want your posts to appear.
+                Find your Author ID in your account settings and paste it below. Then, paste the snippet on your site where you want your posts to appear.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -77,10 +67,12 @@ export default function Home() {
         </main>
       </div>
       <footer className="text-center text-muted-foreground text-sm py-8 mt-auto space-y-2">
-        <div className="flex items-center justify-center gap-2">
-          <UserIcon className="w-4 h-4" />
-          <span>Logged in as: <strong>{user.email}</strong></span>
-        </div>
+       {user && (
+         <div className="flex items-center justify-center gap-2">
+            <UserIcon className="w-4 h-4" />
+            <span>Logged in as: <strong>{user.email}</strong></span>
+          </div>
+        )}
         <p>
           © {new Date().getFullYear()} blogify.blog. All Rights Reserved.
         </p>
