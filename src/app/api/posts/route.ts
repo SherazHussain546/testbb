@@ -5,10 +5,10 @@ import { initializeFirebase } from "@/firebase";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const authorId = searchParams.get('authorId');
+  const authorName = searchParams.get('authorName');
 
-  if (!authorId) {
-    return NextResponse.json({ error: "authorId is required" }, { status: 400 });
+  if (!authorName) {
+    return NextResponse.json({ error: "authorName is required" }, { status: 400 });
   }
 
   try {
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const postsCollection = collection(firestore, collectionPath);
     const q = query(
         postsCollection, 
-        where("authorId", "==", authorId),
+        where("authorName", "==", authorName),
         where("isPublished", "==", true),
         orderBy("publicationDate", "desc")
     );

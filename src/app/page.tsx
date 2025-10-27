@@ -11,7 +11,7 @@ export default function Home() {
   const createScript = `<div id="blogify-create-root"></div>
 <script src="https://premium.blogify.blog/embed.js" defer></script>`;
 
-  const displayScript = `<div class="blogify-posts-embed" data-author-id="YOUR_AUTHOR_ID_HERE"></div>
+  const displayScript = `<div class="blogify-posts-embed" data-author-name="YOUR_AUTHOR_NAME_HERE"></div>
 <script src="https://premium.blogify.blog/display.js" defer></script>`;
 
 
@@ -53,7 +53,7 @@ export default function Home() {
                 Display Your Posts
               </CardTitle>
               <CardDescription>
-                Find your Author ID in your account settings and paste it below. Then, paste the snippet on your site where you want your posts to appear.
+                Enter the author name you use when creating posts below. Then, paste the snippet on your site where you want your posts to appear.
               </CardDescription>
             </CardHeader>
             <CardContent>

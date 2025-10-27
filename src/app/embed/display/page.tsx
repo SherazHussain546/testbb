@@ -73,16 +73,16 @@ function PostSkeleton() {
 
 export default function DisplayPostsPage() {
     const searchParams = useSearchParams();
-    const authorId = searchParams.get('authorId');
+    const authorName = searchParams.get('authorName');
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (authorId) {
+        if (authorName) {
             setLoading(true);
-            fetch(`/api/posts?authorId=${authorId}`)
+            fetch(`/api/posts?authorName=${encodeURIComponent(authorName)}`)
                 .then(res => {
                     if (!res.ok) {
                         return res.json().then(err => { throw new Error(err.error || 'Failed to fetch posts') });
@@ -103,10 +103,10 @@ export default function DisplayPostsPage() {
                     setLoading(false);
                 });
         } else {
-            setError('No author ID provided.');
+            setError('No author name provided.');
             setLoading(false);
         }
-    }, [authorId]);
+    }, [authorName]);
     
     // Inform the parent window of content height changes
     useEffect(() => {
