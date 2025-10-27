@@ -46,10 +46,10 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <FirebaseClientProvider>
-            <Header />
-            <main className="flex-grow">
-              <ProtectedLayout>{children}</ProtectedLayout>
-            </main>
+          <Header />
+          <main className="flex-grow">
+            <ProtectedLayout>{children}</ProtectedLayout>
+          </main>
           <Toaster />
         </FirebaseClientProvider>
       </body>
