@@ -23,7 +23,8 @@ function Header() {
               <Link href="/" className="flex items-center gap-2">
                   <Image src="/bbrb.png" alt="blogify.blog logo" width={28} height={28} />
                   <span className="font-headline text-2xl tracking-tighter">
-                    <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span> embed<span className="text-primary">&lt;&gt;</span>
+                    <span className="font-bold">blogify</span><span className="text-primary font-bold">.blog</span>
+                    <span className="text-lg ml-1">embed<span className="text-primary">&lt;&gt;</span></span>
                   </span>
               </Link>
             </div>
