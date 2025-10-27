@@ -1,8 +1,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useEffect, useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,7 +32,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [state, formAction] = useFormState(signInWithEmail, {
+  const [state, formAction] = useActionState(signInWithEmail, {
     success: false,
   });
 
