@@ -42,14 +42,14 @@ export default function ProtectedLayout({
 
   useEffect(() => {
     // If loading is finished and there's no user, redirect to login.
-    // Do not redirect if we are already on the login page.
-    if (!loading && !user && pathname !== '/login') {
+    // Do not redirect if we are already on the login page or an embed page.
+    if (!loading && !user && pathname !== '/login' && !pathname.startsWith('/embed')) {
       router.push('/login');
     }
   }, [user, loading, router, pathname]);
 
-  // Publicly accessible login page
-  if (pathname === '/login') {
+  // Publicly accessible pages
+  if (pathname === '/login' || pathname.startsWith('/embed')) {
     return <>{children}</>;
   }
 
@@ -64,6 +64,6 @@ export default function ProtectedLayout({
   }
 
   // If no user and not loading (i.e., during the brief moment before redirect),
-  // show a loader to prevent flashing content on the protected route.
+  // show a loader to prevent flashing content on a protected route.
   return <FullPageLoader />;
 }
