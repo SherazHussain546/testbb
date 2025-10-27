@@ -6,7 +6,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import Image from 'next/image';
 import AuthButton from './auth-button';
-import ProtectedLayout from './protected-layout';
 
 
 export const metadata: Metadata = {
@@ -48,7 +47,7 @@ export default function RootLayout({
         <FirebaseClientProvider>
           <Header />
           <main className="flex-grow">
-            <ProtectedLayout>{children}</ProtectedLayout>
+            {children}
           </main>
           <Toaster />
         </FirebaseClientProvider>
