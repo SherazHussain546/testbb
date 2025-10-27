@@ -51,7 +51,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
 
   if (!user) {
     // This case should be handled by the useEffect redirect, but as a fallback
-    return <FullPagePageLoader />;
+    return <FullPageLoader />;
   }
 
   return <>{children}</>;
