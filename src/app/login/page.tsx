@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { signInWithEmail } from "./auth-actions";
+import { signInWithEmail } from "../auth-actions";
 
 const authSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -48,6 +48,11 @@ export default function LoginPage() {
     }
   }, [state, router, toast]);
 
+  // Pass form data to the server action
+  const handleFormAction = (formData: FormData) => {
+    formAction(formData);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-sm mx-auto">
@@ -59,7 +64,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form action={formAction} className="space-y-4">
+            <form action={handleFormAction} className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"
