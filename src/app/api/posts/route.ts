@@ -40,7 +40,10 @@ export async function GET(request: NextRequest) {
           authorName: data.authorName || '',
           category: data.category || '',
           originUrl: data.originUrl || '',
-          publicationDate: publicationDate
+          publicationDate: publicationDate,
+          metaDescription: data.metaDescription || '',
+          featuredImageUrl: data.featuredImageUrl || '',
+          featuredImageAltText: data.featuredImageAltText || '',
         };
         return postData;
     });

@@ -24,6 +24,9 @@ const postSchema = z.object({
   authorId: z.string().min(1, "Author ID is required"),
   originUrl: z.string().url("Invalid origin URL"),
   isPublished: z.preprocess((val) => val === 'on', z.boolean()).optional().default(false),
+  metaDescription: z.string().min(1, "Meta description is required").max(160, "Meta description should be 160 characters or less."),
+  featuredImageUrl: z.string().url("Featured image must be a valid URL.").min(1, "Featured image URL is required."),
+  featuredImageAltText: z.string().min(1, "Featured image alt text is required.").max(125, "Alt text should be 125 characters or less."),
 });
 
 type State = {
@@ -35,6 +38,9 @@ type State = {
     authorId?: string[];
     originUrl?: string[];
     isPublished?: string[];
+    metaDescription?: string[];
+    featuredImageUrl?: string[];
+    featuredImageAltText?: string[];
   };
   error?: string;
   success?: boolean;
@@ -50,6 +56,9 @@ export async function createPost(formData: FormData): Promise<State> {
     authorId: formData.get('authorId'),
     originUrl: formData.get('originUrl'),
     isPublished: formData.get('isPublished'),
+    metaDescription: formData.get('metaDescription'),
+    featuredImageUrl: formData.get('featuredImageUrl'),
+    featuredImageAltText: formData.get('featuredImageAltText'),
   };
 
   const validatedFields = postSchema.safeParse(rawFormData);

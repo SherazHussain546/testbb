@@ -45,6 +45,19 @@
         "isPublished": {
             "type": "boolean",
             "description": "Whether the post is visible to the public."
+        },
+        "metaDescription": {
+          "type": "string",
+          "description": "A short (150-160 characters) summary of the post for SEO."
+        },
+        "featuredImageUrl": {
+          "type": "string",
+          "description": "URL for the post's main featured image.",
+          "format": "uri"
+        },
+        "featuredImageAltText": {
+          "type": "string",
+          "description": "Alt text for the featured image, for accessibility and SEO."
         }
       },
       "required": [
@@ -56,7 +69,10 @@
         "authorId",
         "publicationDate",
         "originUrl",
-        "isPublished"
+        "isPublished",
+        "metaDescription",
+        "featuredImageUrl",
+        "featuredImageAltText"
       ]
     }
   },

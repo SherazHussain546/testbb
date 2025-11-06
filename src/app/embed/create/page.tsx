@@ -33,15 +33,16 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import React, { useEffect, useState, useRef } from "react";
-import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Link, List, Image as ImageIcon, Video, FileText, Table, Sparkles } from "lucide-react";
+import { Loader2, Bold, Italic, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Link, List, Image as ImageIcon, Video, FileText, Table, Sparkles, HelpCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { signInWithEmail } from "./auth-actions";
 import type { User } from "firebase/auth";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const categories = [
   "Sports",
@@ -58,6 +59,9 @@ const postSchema = z.object({
   category: z.enum(categories),
   originUrl: z.string().url(),
   isPublished: z.boolean().default(false),
+  metaDescription: z.string().min(1, "Meta description is required").max(160, "Meta description should be 160 characters or less."),
+  featuredImageUrl: z.string().url("Featured image must be a valid URL.").min(1, "Featured image URL is required."),
+  featuredImageAltText: z.string().min(1, "Featured image alt text is required.").max(125, "Alt text should be 125 characters or less."),
 });
 
 const authSchema = z.object({
@@ -126,6 +130,81 @@ function AuthForm({ onAuthSuccess }: { onAuthSuccess: (user: User) => void }) {
       </form>
     </Form>
   );
+}
+
+function EditorGuideDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="gap-2">
+          <HelpCircle className="h-4 w-4" />
+          Editor Guide
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Content Editor Guide</DialogTitle>
+          <DialogDescription>
+            Follow these instructions to create a well-formatted and SEO-friendly blog post.
+          </DialogDescription>
+        </DialogHeader>
+        <ScrollArea className="max-h-[60vh] p-4 border rounded-md">
+            <div className="prose prose-sm dark:prose-invert">
+                <h4>Content Editor (Markdown)</h4>
+                <p>The content editor uses Markdown. Use the toolbar buttons for quick formatting. Your content will be automatically styled on the blog.</p>
+                
+                <h4>Headings</h4>
+                <p>Use headings to structure your document. A single H1 is recommended for the main title (which is handled by the "Title" field already), then H2 for main sections, H3 for sub-sections, etc. This is crucial for readability and SEO.</p>
+                <pre><code># Heading 1 (Largest)</code></pre>
+                <pre><code>## Heading 2</code></pre>
+                <pre><code>### Heading 3</code></pre>
+                <pre><code>#### Heading 4</code></pre>
+                <pre><code>##### Heading 5</code></pre>
+                <pre><code>###### Heading 6 (Smallest)</code></pre>
+
+                <h4>Text Formatting</h4>
+                <p>Emphasize text with bold or italics.</p>
+                <pre><code>This is **bold text**.</code></pre>
+                <pre><code>This is *italic text*.</code></pre>
+                
+                <h4>Lists</h4>
+                <p>Use a dash for bulleted lists. Each item should be on a new line.</p>
+                <pre><code>- First item</code></pre>
+                <pre><code>- Second item</code></pre>
+                
+                <h4>Links and Media</h4>
+                <p>To add images, videos, or documents, first upload them to a file hosting service (like Google Drive, Dropbox, or a free service like Imgur) and get a direct public link.</p>
+                <p><strong>Regular Link:</strong></p>
+                <pre><code>[Visit our website](https://example.com)</code></pre>
+                <p><strong>Image:</strong></p>
+                <pre><code>![A description of the image](https://example.com/image.jpg)</code></pre>
+                <p><strong>Video or Document Link:</strong></p>
+                <pre><code>[Watch the demo video](https://example.com/video.mp4)</code></pre>
+
+                <h4>Tables</h4>
+                <p>Use the table button to insert a basic Markdown table. You can add more rows and columns by following the pattern.</p>
+                <pre><code>| Header 1 | Header 2 |{'\n'}| -------- | -------- |{'\n'}| Cell 1   | Cell 2   |{'\n'}| Cell 3   | Cell 4   |</code></pre>
+                
+                <h4>SEO & Metadata Fields</h4>
+                <p>These fields are critical for how your post appears on search engines and social media.</p>
+                <ul>
+                    <li><strong>Meta Description:</strong> A short (150-160 characters) summary of your post. This is often shown by Google under your post title in search results.</li>
+                    <li><strong>Featured Image URL & Alt Text:</strong> Provide a direct URL to the main image for your post. The Alt Text is a brief description that helps search engines and is essential for accessibility.</li>
+                </ul>
+
+                <h4>Author Name</h4>
+                <p>The publicly displayed name of the post's author. By default, it's your admin display name, but you can change it to attribute the post to someone else.</p>
+
+            </div>
+        </ScrollArea>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button>Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 function ContentEditor({ field, textareaRef }: { field: any, textareaRef: React.RefObject<HTMLTextAreaElement> }) {
@@ -291,6 +370,9 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
       category: "Tech",
       originUrl: originUrl,
       isPublished: false,
+      metaDescription: "",
+      featuredImageUrl: "",
+      featuredImageAltText: "",
     },
   });
 
@@ -391,7 +473,10 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
           
           <FormField control={form.control} name="content" render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-headline">Content</FormLabel>
+                 <div className="flex items-center justify-between">
+                    <FormLabel className="font-headline">Content</FormLabel>
+                    <EditorGuideDialog />
+                 </div>
                 <ContentEditor field={field} textareaRef={textareaRef} />
                 <FormDescription>
                   You can use Markdown for formatting.
@@ -409,6 +494,36 @@ function PostForm({ authorId, originUrl }: { authorId: string; originUrl: string
               </FormItem>
             )}
           />
+
+          <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-xl">SEO & Metadata</CardTitle>
+                <CardDescription>Optimize how your post appears on search engines.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                 <FormField control={form.control} name="metaDescription" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Meta Description</FormLabel>
+                        <FormControl><Textarea placeholder="A brief summary of your post (150-160 characters)..." {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                 )} />
+                 <FormField control={form.control} name="featuredImageUrl" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Featured Image URL</FormLabel>
+                        <FormControl><Input placeholder="https://example.com/image.jpg" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                 )} />
+                 <FormField control={form.control} name="featuredImageAltText" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Featured Image Alt Text</FormLabel>
+                        <FormControl><Input placeholder="A concise description of the image..." {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                 )} />
+            </CardContent>
+          </Card>
 
           <Button type="submit" disabled={isSubmitting} className="w-full bg-accent hover:bg-accent/90" size="lg">
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -475,4 +590,3 @@ export default function CreatePostPage() {
     </main>
   );
 }
-

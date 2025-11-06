@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription }
 import { Badge } from '@/components/ui/badge';
 import { format, parseISO } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
+import Image from 'next/image';
 
 type Post = {
     id: string;
@@ -16,12 +17,24 @@ type Post = {
     category: string;
     publicationDate: string | null;
     originUrl: string;
+    featuredImageUrl: string;
+    featuredImageAltText: string;
 };
 
 function PostCard({ post }: { post: Post }) {
     const publicationDate = post.publicationDate ? parseISO(post.publicationDate) : null;
     return (
         <Card>
+            {post.featuredImageUrl && (
+                <div className="relative aspect-[16/9] w-full">
+                    <Image
+                        src={post.featuredImageUrl}
+                        alt={post.featuredImageAltText}
+                        fill
+                        className="object-cover rounded-t-lg"
+                    />
+                </div>
+            )}
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <CardTitle className="text-xl font-bold mb-2">{post.title}</CardTitle>
@@ -52,6 +65,7 @@ function PostCard({ post }: { post: Post }) {
 function PostSkeleton() {
     return (
         <Card>
+            <Skeleton className="h-48 w-full rounded-t-lg" />
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <Skeleton className="h-6 w-3/4" />
