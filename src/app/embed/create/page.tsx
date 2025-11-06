@@ -149,52 +149,88 @@ function EditorGuideDialog() {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh] p-4 border rounded-md">
-            <div className="prose prose-sm dark:prose-invert">
-                <h4>Content Editor (Markdown)</h4>
-                <p>The content editor uses Markdown. Use the toolbar buttons for quick formatting. Your content will be automatically styled on the blog.</p>
+            <div className="space-y-6">
+                <div>
+                    <h4 className="text-primary font-semibold">Content Editor (Markdown)</h4>
+                    <p>The content editor uses Markdown. Use the toolbar buttons for quick formatting. Your content will be automatically styled on the blog.</p>
+                </div>
                 
-                <h4>Headings</h4>
-                <p>Use headings to structure your document. A single H1 is recommended for the main title (which is handled by the "Title" field already), then H2 for main sections, H3 for sub-sections, etc. This is crucial for readability and SEO.</p>
-                <pre><code># Heading 1 (Largest)</code></pre>
-                <pre><code>## Heading 2</code></pre>
-                <pre><code>### Heading 3</code></pre>
-                <pre><code>#### Heading 4</code></pre>
-                <pre><code>##### Heading 5</code></pre>
-                <pre><code>###### Heading 6 (Smallest)</code></pre>
+                <div>
+                    <h4 className="text-primary font-semibold">Headings</h4>
+                    <p>Use headings to structure your document. A single H1 is recommended for the main title (handled by the "Title" field), then H2 for main sections, H3 for sub-sections, etc.</p>
+                    <div className="mt-2 p-3 bg-green-100/50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800 space-y-1">
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs"># Heading 1 (Largest)</p>
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">## Heading 2</p>
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">### Heading 3</p>
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">#### Heading 4</p>
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">##### Heading 5</p>
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">###### Heading 6 (Smallest)</p>
+                    </div>
+                </div>
 
-                <h4>Text Formatting</h4>
-                <p>Emphasize text with bold or italics.</p>
-                <pre><code>This is **bold text**.</code></pre>
-                <pre><code>This is *italic text*.</code></pre>
+                <div>
+                    <h4 className="text-primary font-semibold">Text Formatting</h4>
+                    <p>Emphasize text with bold or italics.</p>
+                     <div className="mt-2 p-3 bg-green-100/50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800 space-y-1">
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">This is **bold text**.</p>
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">This is *italic text*.</p>
+                    </div>
+                </div>
                 
-                <h4>Lists</h4>
-                <p>Use a dash for bulleted lists. Each item should be on a new line.</p>
-                <pre><code>- First item</code></pre>
-                <pre><code>- Second item</code></pre>
+                <div>
+                    <h4 className="text-primary font-semibold">Lists</h4>
+                    <p>Use a dash for bulleted lists. Each item should be on a new line.</p>
+                    <div className="mt-2 p-3 bg-green-100/50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800 space-y-1">
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">- First item</p>
+                        <p className="text-green-800 dark:text-green-300 font-mono text-xs">- Second item</p>
+                    </div>
+                </div>
                 
-                <h4>Links and Media</h4>
-                <p>To add images, videos, or documents, first upload them to a file hosting service (like Google Drive, Dropbox, or a free service like Imgur) and get a direct public link.</p>
-                <p><strong>Regular Link:</strong></p>
-                <pre><code>[Visit our website](https://example.com)</code></pre>
-                <p><strong>Image:</strong></p>
-                <pre><code>![A description of the image](https://example.com/image.jpg)</code></pre>
-                <p><strong>Video or Document Link:</strong></p>
-                <pre><code>[Watch the demo video](https://example.com/video.mp4)</code></pre>
+                <div>
+                    <h4 className="text-primary font-semibold">Links and Media</h4>
+                    <p>To add images, videos, or documents, first upload them to a file hosting service (like Google Drive, Dropbox, or Imgur) to get a public URL.</p>
+                    <div className="mt-2 p-3 bg-green-100/50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800 space-y-2">
+                        <div>
+                            <p className="font-medium text-sm">Regular Link:</p>
+                            <p className="text-green-800 dark:text-green-300 font-mono text-xs">[Visit our website](https://example.com)</p>
+                        </div>
+                        <div>
+                            <p className="font-medium text-sm">Image:</p>
+                            <p className="text-green-800 dark:text-green-300 font-mono text-xs">![A description of the image](https://example.com/image.jpg)</p>
+                        </div>
+                        <div>
+                            <p className="font-medium text-sm">Video or Document Link:</p>
+                            <p className="text-green-800 dark:text-green-300 font-mono text-xs">[Watch the demo video](https://example.com/video.mp4)</p>
+                        </div>
+                    </div>
+                </div>
 
-                <h4>Tables</h4>
-                <p>Use the table button to insert a basic Markdown table. You can add more rows and columns by following the pattern.</p>
-                <pre><code>| Header 1 | Header 2 |{'\n'}| -------- | -------- |{'\n'}| Cell 1   | Cell 2   |{'\n'}| Cell 3   | Cell 4   |</code></pre>
+                <div>
+                    <h4 className="text-primary font-semibold">Tables</h4>
+                    <p>Use the table button to insert a basic Markdown table. You can add more rows and columns by following the pattern.</p>
+                    <div className="mt-2 p-3 bg-green-100/50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
+                        <pre className="text-green-800 dark:text-green-300 font-mono text-xs">
+{`| Header 1 | Header 2 |
+| -------- | -------- |
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |`}
+                        </pre>
+                    </div>
+                </div>
                 
-                <h4>SEO & Metadata Fields</h4>
-                <p>These fields are critical for how your post appears on search engines and social media.</p>
-                <ul>
-                    <li><strong>Meta Description:</strong> A short (150-160 characters) summary of your post. This is often shown by Google under your post title in search results.</li>
-                    <li><strong>Featured Image URL & Alt Text:</strong> Provide a direct URL to the main image for your post. The Alt Text is a brief description that helps search engines and is essential for accessibility.</li>
-                </ul>
+                <div>
+                    <h4 className="text-primary font-semibold">SEO & Metadata Fields</h4>
+                    <p>These fields are critical for how your post appears on search engines and social media.</p>
+                    <ul className="list-disc list-inside mt-2 text-sm space-y-1">
+                        <li><strong>Meta Description:</strong> A short (150-160 characters) summary of your post.</li>
+                        <li><strong>Featured Image URL & Alt Text:</strong> Provide a URL to the main image for your post and a brief description for accessibility and SEO.</li>
+                    </ul>
+                </div>
 
-                <h4>Author Name</h4>
-                <p>The publicly displayed name of the post's author. By default, it's your admin display name, but you can change it to attribute the post to someone else.</p>
-
+                 <div>
+                    <h4 className="text-primary font-semibold">Author Name</h4>
+                    <p>The publicly displayed name of the post's author. You can change it to attribute the post to someone else.</p>
+                </div>
             </div>
         </ScrollArea>
         <DialogFooter>
