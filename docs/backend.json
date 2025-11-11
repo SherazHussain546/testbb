@@ -104,17 +104,6 @@
         }
       }
     ],
-    "indexes": [
-        {
-            "collectionGroup": "blog_posts",
-            "queryScope": "COLLECTION_GROUP",
-            "fields": [
-                { "fieldPath": "authorId", "order": "ASCENDING" },
-                { "fieldPath": "isPublished", "order": "ASCENDING" },
-                { "fieldPath": "publicationDate", "order": "DESCENDING" }
-            ]
-        }
-    ],
     "reasoning": "This design prioritizes security and scalability for handling blog posts created via an embeddable script. The key principle is Authorization Independence, achieved by denormalizing the `originUrl` (representing the website where the blog post was created) into each `BlogPost` document. This eliminates the need for security rules to perform `get()` operations on parent documents, ensuring atomic operations and simplifying debugging. The structure supports secure list operations (QAPs) because each document inherently contains the information needed for authorization. Structural Segregation isn't strictly applicable here as all blog posts created via the embed should be treated the same way (i.e., publicly accessible). Access Modeling uses a top-level collection to avoid hierarchical dependencies."
   }
 }
