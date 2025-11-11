@@ -35,6 +35,13 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
+     * @description Allows a collection group query on 'blog_posts'. This is required for the API to fetch all posts for a given author.
+     */
+    match /{path=**}/blog_posts/{blogPostId} {
+      allow get, list: if true;
+    }
+
+    /**
      * @description Allows reading any blog post. Only allows creating, updating, or deleting a blog post if the request's origin matches the blog post's originUrl.
      * @path /artifacts/{appId}/public/data/blog_posts/{blogPostId}
      * @allow (get, list): Any user can read any blog post.
@@ -53,7 +60,6 @@ service cloud.firestore {
      * @principle Enforces origin-based authorization for write operations on blog posts.
      */
     match /artifacts/{appId}/public/data/blog_posts/{blogPostId} {
-      allow get, list: if true;
       allow create: if isValidOrigin(request.resource.data.originUrl);
       allow update: if isExistingValidOrigin(request.resource.data.originUrl);
       allow delete: if isExistingValidOrigin(resource.data.originUrl);
