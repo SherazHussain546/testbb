@@ -1,35 +1,25 @@
 /**
- * @fileoverview Firestore Security Rules for Blogify Blog Posts.
+ * @fileoverview Firestore Security Rules for Blogify CMS.
  *
  * Core Philosophy:
- * This ruleset is designed to secure blog posts created via an embeddable script,
- * allowing read access to anyone but restricting write access to authorized origins.
- * The central idea is Authorization Independence, achieved through the denormalization
- * of the `originUrl` field on each `BlogPost` document. This allows the rules to
- * authorize write requests based solely on the contents of the document being written,
- * without needing to perform expensive or impossible `get()` operations on related documents.
+ * This ruleset provides public read access to blog posts, while restricting write access to authenticated users (admins).
+ * Subscriptions are managed by admins only.
  *
  * Data Structure:
- * Blog posts are stored in the `artifacts/{appId}/public/data/blog_posts/{blogPostId}`
- * collection.  The `appId` isolates artifacts across different Firebase Apps. Each
- * `BlogPost` document contains metadata about the post including an `originUrl` field
- * representing the website where it was created.
+ * - /artifacts/{appId}/public/data/blog_posts/{blogPostId}: Stores public blog post data.
+ * - /subscriptions/{subscriptionId}: Stores subscription data, accessible only to admins.
  *
  * Key Security Decisions:
- * - Public Read Access: All blog posts are publicly readable.
- * - Origin-Based Write Access: Writes (create, update, delete) are restricted to requests
- *   where the `originUrl` matches the origin of the request.
- * - No User Authentication Required: Posts can be created without user authentication using anonymous authentication.
+ * - Public read access for blog posts is enabled.
+ * - Admin role is implicitly determined by authentication status. Only authenticated users can write blog posts or subscriptions.
+ * - The rules do NOT enforce the exact schema of the data, focusing on access control.
  *
  * Denormalization for Authorization:
- * The `originUrl` field is denormalized into the `BlogPost` document to enable
- * origin-based authorization without needing to perform `get()` operations.
+ * - None: Blog posts are publicly readable; admin status is determined by authentication.
  *
  * Structural Segregation:
- * Not applicable in this case, as all blog posts created via the embeddable script
- * are treated the same way (publicly accessible).
+ * - Public blog posts are stored in a top-level collection, separate from any private user data.
  */
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -42,52 +32,42 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows reading any blog post. Only allows creating, updating, or deleting a blog post if the request's origin matches the blog post's originUrl.
+     * @description Allows public read access to blog posts, but restricts write access to authenticated users.
      * @path /artifacts/{appId}/public/data/blog_posts/{blogPostId}
-     * @allow (get, list): Any user can read any blog post.
-     * @allow (create): A request with a matching `originUrl` can create a blog post.
-     *   Example: request.auth == null && request.resource.data.originUrl == 'https://example.com'
-     * @allow (update): A request with a matching `originUrl` can update a blog post.
-     *   Example: request.auth == null && resource.data.originUrl == 'https://example.com'
-     * @allow (delete): A request with a matching `originUrl` can delete a blog post.
-     *   Example: request.auth == null && resource.data.originUrl == 'https://example.com'
-     * @deny (create): A request with a mismatched `originUrl` is rejected.
-     *   Example: request.auth == null && request.resource.data.originUrl == 'https://evil.com'
-     * @deny (update): A request with a mismatched `originUrl` is rejected.
-     *   Example: request.auth == null && resource.data.originUrl == 'https://evil.com'
-     * @deny (delete): A request with a mismatched `originUrl` is rejected.
-     *   Example: request.auth == null && resource.data.originUrl == 'https://evil.com'
-     * @principle Enforces origin-based authorization for write operations on blog posts.
+     * @allow (get, list): Any user can read blog posts.
+     * @allow (create, update, delete): Only authenticated users can create, update, or delete blog posts.
+     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete blog posts.
+     * @principle Public read, admin-only write.
      */
     match /artifacts/{appId}/public/data/blog_posts/{blogPostId} {
-      allow create: if isValidOrigin(request.resource.data.originUrl);
-      allow update: if isExistingValidOrigin(request.resource.data.originUrl);
-      allow delete: if isExistingValidOrigin(resource.data.originUrl);
+      allow get: if true;
+      allow list: if true;
+
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
-    // Helper functions
+    /**
+     * @description Restricts access to subscriptions collection to authenticated users (admins).
+     * @path /subscriptions/{subscriptionId}
+     * @allow (get, list): Only authenticated users can read subscription data.
+     * @allow (create, update, delete): Only authenticated users can create, update, or delete subscription data.
+     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete subscription data.
+     * @principle Admin-only access.
+     */
+    match /subscriptions/{subscriptionId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
+    }
+
+    // Helper function to determine if a user is signed in
     function isSignedIn() {
       return request.auth != null;
-    }
-
-    // Validates the origin of the request against a given URL.
-    function isValidOrigin(originUrl) {
-      return originUrl == request.origin;
-    }
-
-   // Validates the origin of the request against a given URL and verifies the document exists
-    function isExistingValidOrigin(originUrl) {
-      return resource != null && originUrl == request.origin;
-    }
-
-    // Checks if the user is the owner of the resource (based on userId).
-    function isOwner(userId) {
-      return request.auth.uid == userId;
-    }
-
-    // Checks if the user is the owner of the existing resource (based on userId).
-    function isExistingOwner(userId) {
-      return isOwner(userId) && resource != null;
     }
   }
 }
