@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { collection, query, where, getDocs, orderBy, Timestamp } from "firebase/firestore";
+import { collectionGroup, query, where, getDocs, orderBy, Timestamp } from "firebase/firestore";
 import { initializeFirebase } from "@/firebase";
 
 type Post = {
@@ -14,6 +14,7 @@ type Post = {
     featuredImageUrl: string;
     featuredImageAltText: string;
     isPublished: boolean;
+    metaDescription: string;
 };
 
 export async function GET(request: NextRequest) {
@@ -26,17 +27,11 @@ export async function GET(request: NextRequest) {
 
   try {
     const { firestore } = initializeFirebase();
-    const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
-    if (!appId) {
-        throw new Error("Firebase App ID is not configured.");
-    }
-    // Note: This path uses a collectionGroup query, so we just use the collection ID.
-    const collectionPath = `blog_posts`;
     
-    const postsCollection = collection(firestore, collectionPath);
+    // Correctly use a collectionGroup query to find 'blog_posts' across all parent documents.
+    const postsCollection = collectionGroup(firestore, 'blog_posts');
 
-    // Simplified query: Only filter by author and order by date.
-    // This avoids the need for a complex composite index.
+    // This simplified query avoids the need for a complex composite index.
     const q = query(
         postsCollection, 
         where("authorId", "==", authorId),
@@ -46,14 +41,14 @@ export async function GET(request: NextRequest) {
     const querySnapshot = await getDocs(q);
     const posts: Post[] = [];
     
-    querySnapshot.docs.forEach(doc => {
+    querySnapshot.forEach(doc => {
         const data = doc.data();
         
         // Manual filtering for isPublished happens here, in the application code.
         if (data.isPublished === true) {
             const publicationDate = data.publicationDate instanceof Timestamp 
                 ? data.publicationDate.toDate().toISOString() 
-                : null;
+                : (data.publicationDate ? new Date(data.publicationDate).toISOString() : null);
             
             const postData: Post = {
               id: doc.id,
